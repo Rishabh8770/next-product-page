@@ -1,0 +1,176 @@
+[
+  {
+    "id": "3",
+    "name": "Playstation",
+    "business": [
+      "Sony",
+      "Naughty Dog",
+      "Activision",
+      "Square Enix"
+    ],
+    "regions": [
+      "USA",
+      "Japan"
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Nike",
+    "business": [
+      "Nike Inc.",
+      "Jordan",
+      "TSMC",
+      "Coca-Cola"
+    ],
+    "regions": [
+      "USA",
+      "North America"
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Amazon Echo",
+    "business": [
+      "Amazon.com",
+      "Intel",
+      "Dolby",
+      "Anker",
+      "Aisin Seiki",
+      "Sony",
+      "Activision",
+      "Square Enix",
+      "Nike Inc."
+    ],
+    "regions": [
+      "USA",
+      "China",
+      "Japan",
+      "Global",
+      "North America",
+      "Taiwan",
+      "Korea"
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Toyota Prius",
+    "business": [
+      "Toyota Motors"
+    ],
+    "regions": [
+      "Japan"
+    ]
+  },
+  {
+    "id": "7",
+    "name": "Dyson Vacuum Cleaner",
+    "business": [
+      "Dyson Ltd",
+      "Max Co.",
+      "W.L. Gore"
+    ],
+    "regions": [
+      "USA",
+      "China",
+      "Japan"
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Starbucks",
+    "business": [
+      "Tata",
+      "Nestle",
+      "Pepsico",
+      "Aramark"
+    ],
+    "regions": [
+      "USA",
+      "Taiwan"
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Tesla",
+    "business": [
+      "Tesla Inc",
+      "Panasonic",
+      "LG Chem",
+      "Nvidia"
+    ],
+    "regions": [
+      "USA",
+      "Korea"
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Samsung",
+    "business": [
+      "Galaxy",
+      "Qualcomm",
+      "Corning",
+      "Google"
+    ],
+    "regions": [
+      "USA",
+      "Korea"
+    ]
+  },
+  {
+    "id": "11",
+    "name": "xyz",
+    "business": [
+      "Apple Inc",
+      "Foxconn",
+      "Aisin Seiki"
+    ],
+    "regions": [
+      "USA",
+      "Taiwan",
+      "Japan",
+      "India"
+    ]
+  },
+  {
+    "id": "94db6100-32b6-47bc-aaac-37e0c366a025",
+    "name": "dgtge",
+    "business": [
+      "Apple Inc",
+      "Sony",
+      "Naughty Dog"
+    ],
+    "regions": [
+      "USA",
+      "North America",
+      "China",
+      "Taiwan"
+    ]
+  },
+  {
+    "id": "bdc81c4a-a8c6-4171-8274-b6d81452532a",
+    "name": "ioliol",
+    "business": [
+      "Naughty Dog",
+      "Square Enix",
+      "Nike Inc."
+    ],
+    "regions": [
+      "China",
+      "Taiwan",
+      "Korea"
+    ]
+  },
+  {
+    "id": "1b9b13bb-adaa-4a00-abd9-33214e91a5dc",
+    "name": "lkfgf",
+    "business": [
+      "Naughty Dog",
+      "Square Enix"
+    ],
+    "regions": [
+      "Japan",
+      "Taiwan"
+    ]
+  }
+]
