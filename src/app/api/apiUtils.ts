@@ -1,23 +1,17 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-
-type Product = {
-  id: string;
-  name: string;
-  business: string[];
-  regions: string[];
-};
+import { ProductProps } from "@/types/Types";
 
 const getFilePath = () => path.join(process.cwd(), "src/data", "products.json");
 
-export const readData = (): Product[] => {
+export const readData = (): ProductProps[] => {
   const filePath = getFilePath();
   const jsonData = fs.readFileSync(filePath, "utf-8");
   return JSON.parse(jsonData);
 };
 
-export const writeData = (data: Product[]) => {
+export const writeData = (data: ProductProps[]) => {
   const filePath = getFilePath();
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 };

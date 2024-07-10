@@ -2,15 +2,10 @@ import { useProductContext } from "@/context/ProductPageContext";
 import { Trash2, Edit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ProductProps } from "@/types/Types";
 
-type Product = {
-  id: string;
-  name: string;
-  business: string[];
-  regions: string[];
-};
 
-export default function ProductCard({ id, name, business, regions }: Product) {
+export default function ProductCard({ id, name, business, regions }: ProductProps) {
   const { deleteProduct } = useProductContext();
   const router = useRouter();
 

@@ -1,14 +1,8 @@
 import productData from "@/data/products.json";
-
-type Product = {
-  id: string;
-  name: string;
-  business: string[];
-  regions: string[];
-};
+import { ProductProps } from "@/types/Types";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
-  const product: Product | undefined = productData.find(
+  const product: ProductProps | undefined = productData.find(
     (product) => product.id === params.id
   );
   if (!product) {
