@@ -22,7 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ProductProvider>
-          <PageHeader />
+          <div className="shadow-md">
+            <PageHeader />
+          </div>
           <Suspense fallback={<LoadingPage />}>{children}</Suspense>
         </ProductProvider>
       </body>

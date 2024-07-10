@@ -63,7 +63,7 @@ export default function AddOrEditProduct({
     setSelectRegionsOptions(selectedOptions);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (productName && selectBusinessOptions && selectRegionsOptions) {
       const productData = {
@@ -72,16 +72,22 @@ export default function AddOrEditProduct({
         business: selectBusinessOptions.map((option) => option.value),
         regions: selectRegionsOptions.map((option) => option.value),
       };
-      if (isEditMode) {
-        updateProduct(productData);
-      } else {
-        addProduct(productData);
-        router.push("/")
+  
+      try {
+        if (isEditMode) {
+          await updateProduct(productData);
+        } else {
+          await addProduct(productData);
+        }
+        router.push("/");
+      } catch (error) {
+        console.error("Error submitting form", error);
       }
     } else {
       alert("Please fill all fields");
     }
   };
+  
 
   return (
     <>
