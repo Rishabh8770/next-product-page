@@ -31,18 +31,20 @@ export const SearchAndSort = ({
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="mx-2">
+      <div className="mx-2 flex flex-col items-center">
+        <p className="mb-2">Search Product</p>
         <input
           type="text"
           placeholder={placeholder}
           value={search}
           onChange={handleChange}
-          className="rounded w-auto p-2 mx-1 border border-gray-300"
+          className="rounded w-3/4 p-2 mx-1 border border-gray-300"
         />
       </div>
-      <div className="my-4">
-        <label htmlFor="filter" className="mr-2 h6">
-          Sort By:{" "}
+      <div className="border-t border-gray-300 mb-2 w-1/4 mt-4"></div>
+      <div className="my-4 flex flex-col items-center">
+        <label htmlFor="filter" className="mr-2 h6 mb-2">
+          Sort By
         </label>
         <select
           name="filter"
