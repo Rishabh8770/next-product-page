@@ -3,16 +3,24 @@ import { Trash2, Edit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ProductProps } from "@/types/Types";
+import { notifyDeleteProduct } from "@/utils/NotificationUtils";
+import { debounce } from "lodash";
 
-
-export default function ProductCard({ id, name, business, regions }: ProductProps) {
+export default function ProductCard({
+  id,
+  name,
+  business,
+  regions,
+}: ProductProps) {
   const { deleteProduct } = useProductContext();
   const router = useRouter();
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      deleteProduct(id);
+      debounce(() => {
+        notifyDeleteProduct({ id, name }, () => deleteProduct(id));
+      }, 500)();
     } catch (error) {
       console.error(`Error deleting product with id ${id}`, error);
     }
@@ -49,12 +57,11 @@ export default function ProductCard({ id, name, business, regions }: ProductProp
                 <strong>Status</strong>
               </p>
             </div>
-
           </div>
         </Link>
         <div className="flex justify-between p-2 ">
-          <Edit onClick={handleEdit} cursor="pointer"/>
-          <Trash2 color="#000000" onClick={handleDelete} cursor="pointer"/>
+          <Edit onClick={handleEdit} cursor="pointer" />
+          <Trash2 color="#000000" onClick={handleDelete} cursor="pointer" />
         </div>
       </div>
     </div>

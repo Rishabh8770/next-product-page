@@ -9,6 +9,7 @@ import { SearchAndSort, SortOptions } from "@/components/SearchAndSort";
 import { ProductProps } from "@/types/Types";
 import { Option } from "./MultiSelectDropdown";
 import FilterProducts from "./FilterProducts";
+import { NotificationContainer } from "./UserFeedback";
 
 function delay(milliSeconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliSeconds));
@@ -126,8 +127,9 @@ export default function HomePage() {
             onRegionsFilterChange={handleRegionFilterChange}
           />
         </div>
+        <div className="border-t lg:border-none border-gray-300 mb-2 w-full mt-4"></div>
       </div>
-      <div className="flex flex-wrap justify-center lg:justify-start w-full lg:w-5/6 pl-0 lg:pl-4 mt-4 lg:mt-0">
+      <div className="flex flex-wrap justify-center lg:justify-start w-full lg:w-5/6 pl-0 lg:pl-16 mt-4 lg:mt-0">
         {sortedAndFilteredProducts.length > 0 ? (
           sortedAndFilteredProducts.map((product) => (
             <ProductCard
@@ -140,10 +142,11 @@ export default function HomePage() {
           ))
         ) : (
           <div className="flex items-center h-screen">
-            <p className="text-xl">No such Product</p>
+            <p className="text-xl">No Product to display</p>
           </div>
         )}
       </div>
+      <NotificationContainer />
     </div>
   );
 }
