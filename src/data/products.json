@@ -1,15 +1,34 @@
 [
   {
+    "id": "1",
+    "name": "iphone",
+    "business": [
+      "Apple Inc",
+      "Foxconn",
+      "Aisin Seiki"
+    ],
+    "regions": [
+      "USA",
+      "Taiwan",
+      "Japan",
+      "India"
+    ],
+    "status": "pending"
+  },
+  {
     "id": "3",
     "name": "Playstation",
     "business": [
       "Sony",
-      "Naughty Dog"
+      "Naughty Dog",
+      "Activision",
+      "Square Enix"
     ],
     "regions": [
       "USA",
       "Japan"
-    ]
+    ],
+    "status": "pending"
   },
   {
     "id": "4",
@@ -23,7 +42,8 @@
     "regions": [
       "USA",
       "North America"
-    ]
+    ],
+    "status": "pending"
   },
   {
     "id": "5",
@@ -47,7 +67,8 @@
       "North America",
       "Taiwan",
       "Korea"
-    ]
+    ],
+    "status": "pending"
   },
   {
     "id": "6",
@@ -57,7 +78,8 @@
     ],
     "regions": [
       "Japan"
-    ]
+    ],
+    "status": "pending"
   },
   {
     "id": "7",
@@ -71,7 +93,8 @@
       "USA",
       "China",
       "Japan"
-    ]
+    ],
+    "status": "pending"
   },
   {
     "id": "8",
@@ -85,7 +108,8 @@
     "regions": [
       "USA",
       "Taiwan"
-    ]
+    ],
+    "status": "pending"
   },
   {
     "id": "9",
@@ -98,8 +122,10 @@
     ],
     "regions": [
       "USA",
-      "Korea"
-    ]
+      "Korea",
+      "Japan"
+    ],
+    "status": "pending"
   },
   {
     "id": "10",
@@ -113,112 +139,31 @@
     "regions": [
       "USA",
       "Korea"
-    ]
+    ],
+    "status": "pending"
   },
   {
-    "id": "11",
-    "name": "xyz",
+    "id": "318397a9-edc3-418f-8553-5c8972fd4bf0",
+    "name": "acsa",
     "business": [
-      "Apple Inc",
       "Foxconn",
-      "Aisin Seiki"
+      "Sony"
     ],
     "regions": [
-      "USA",
       "Taiwan",
       "Japan"
-    ]
+    ],
+    "status": "pending"
   },
   {
-    "id": "94db6100-32b6-47bc-aaac-37e0c366a025",
-    "name": "dgtge",
+    "id": "e1c9085d-3521-42ea-be20-7146a39e5d6f",
+    "name": "ykuyky",
     "business": [
-      "Apple Inc",
-      "Sony",
-      "Naughty Dog"
+      "Foxconn"
     ],
     "regions": [
-      "USA",
-      "North America",
-      "China",
-      "Taiwan"
-    ]
-  },
-  {
-    "id": "bdc81c4a-a8c6-4171-8274-b6d81452532a",
-    "name": "ioliol",
-    "business": [
-      "Naughty Dog",
-      "Square Enix",
-      "Nike Inc."
+      "India"
     ],
-    "regions": [
-      "China",
-      "Taiwan",
-      "Korea"
-    ]
-  },
-  {
-    "id": "1b9b13bb-adaa-4a00-abd9-33214e91a5dc",
-    "name": "lkfgf",
-    "business": [
-      "Naughty Dog",
-      "Nike Inc.",
-      "Jordan",
-      "Coca-Cola"
-    ],
-    "regions": [
-      "Japan",
-      "North America",
-      "China",
-      "Taiwan"
-    ]
-  },
-  {
-    "id": "61305485-13a2-4a0f-94e5-5aca6a6c07ed",
-    "name": "Rishabh",
-    "business": [
-      "Sony",
-      "Nike Inc.",
-      "TSMC"
-    ],
-    "regions": [
-      "Japan",
-      "Global"
-    ]
-  },
-  {
-    "id": "6dded475-7690-47f8-9971-5cd61b702009",
-    "name": "uyuj",
-    "business": [
-      "Activision"
-    ],
-    "regions": [
-      "Japan"
-    ]
-  },
-  {
-    "id": "0b72efbb-5e42-4d26-b3d3-787066017491",
-    "name": "axsad",
-    "business": [
-      "Naughty Dog",
-      "Activision"
-    ],
-    "regions": [
-      "Japan",
-      "North America"
-    ]
-  },
-  {
-    "id": "86c93084-a388-4e03-95fb-db9aeaa70ec9",
-    "name": "veerv",
-    "business": [
-      "Activision",
-      "Nike Inc."
-    ],
-    "regions": [
-      "North America",
-      "China"
-    ]
+    "status": "pending"
   }
 ]

@@ -138,6 +138,7 @@ export default function HomePage() {
               name={product.name}
               business={product.business}
               regions={product.regions}
+              status={product.status}
             />
           ))
         ) : (

@@ -23,3 +23,18 @@ export const handleResponse = <T>(data: T, status: number = 200) => {
 export const handleError = (error: string, status: number = 500) => {
   return NextResponse.json({ error }, { status });
 };
+
+const updateProductsStatus = () => {
+  const filePath = getFilePath();
+  const jsonData = fs.readFileSync(filePath, "utf-8");
+  const products: ProductProps[] = JSON.parse(jsonData);
+
+  const updatedProducts = products.map(product => ({
+    ...product,
+    status: product.status || "pending"
+  }));
+
+  fs.writeFileSync(filePath, JSON.stringify(updatedProducts, null, 2), "utf-8");
+};
+
+updateProductsStatus();

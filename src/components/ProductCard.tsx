@@ -11,6 +11,7 @@ export default function ProductCard({
   name,
   business,
   regions,
+  status = "pending",
 }: ProductProps) {
   const { deleteProduct } = useProductContext();
   const router = useRouter();
@@ -30,6 +31,10 @@ export default function ProductCard({
     e.preventDefault();
     router.push(`/editProduct?id=${id}`);
   };
+
+  const statusClass = `w-[fit-content] rounded p-1 mb-2 ${
+    status === "pending" ? "text-gray-500 bg-gray-200" : ""
+  }`;
 
   return (
     <div
@@ -52,14 +57,12 @@ export default function ProductCard({
                 <strong>Regions :</strong> {regions.join(", ")}
               </p>
             </div>
-            <div className="h-10">
-              <p>
-                <strong>Status</strong>
-              </p>
+            <div className={statusClass}>
+              <p>{status}</p>
             </div>
           </div>
         </Link>
-        <div className="flex justify-between p-2 ">
+        <div className="flex justify-between p-2">
           <Edit onClick={handleEdit} cursor="pointer" />
           <Trash2 color="#000000" onClick={handleDelete} cursor="pointer" />
         </div>

@@ -1,9 +1,4 @@
-// src/app/api/products/route.ts
-
-import { NextResponse } from "next/server";
 import { readData, writeData, handleResponse, handleError } from "../apiUtils";
-import fs from "fs";
-import path from "path";
 
 export async function GET() {
   try {
