@@ -1,13 +1,20 @@
 import ProductStatus from "@/components/ProductStatus";
 import productData from "@/data/products.json";
+import deletedProductData from "@/data/deletedProductData.json"
 import { ProductProps } from "@/types/Types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
-  const product: ProductProps | undefined = productData.find(
-    (product) => product.id === params.id
-  );
+  let product: ProductProps | undefined;
+
+  // Try to find the product in productData
+  product = productData.find((product) => product.id === params.id);
+
+  // If not found in productData, try to find in deletedProductData
+  if (!product) {
+    product = deletedProductData.find((product) => product.id === params.id);
+  }
   if (!product) {
     return <div>Product not found</div>;
   }

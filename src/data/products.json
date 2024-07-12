@@ -5,7 +5,8 @@
     "business": [
       "Apple Inc",
       "Foxconn",
-      "Aisin Seiki"
+      "Aisin Seiki",
+      "Naughty Dog"
     ],
     "regions": [
       "USA",
@@ -13,7 +14,7 @@
       "Japan",
       "India"
     ],
-    "status": "pending"
+    "status": "active"
   },
   {
     "id": "3",
@@ -43,7 +44,7 @@
       "USA",
       "North America"
     ],
-    "status": "pending"
+    "status": "rejected"
   },
   {
     "id": "5",
@@ -143,26 +144,30 @@
     "status": "pending"
   },
   {
-    "id": "318397a9-edc3-418f-8553-5c8972fd4bf0",
-    "name": "acsa",
+    "id": "c662f483-51ed-49da-b694-c604ff0cc157",
+    "name": "ertyui",
     "business": [
       "Foxconn",
+      "Aisin Seiki",
       "Sony"
     ],
     "regions": [
       "Taiwan",
-      "Japan"
+      "Japan",
+      "India"
     ],
     "status": "pending"
   },
   {
-    "id": "e1c9085d-3521-42ea-be20-7146a39e5d6f",
-    "name": "ykuyky",
+    "id": "9c8eb62b-9e4b-401d-a328-5c795531e005",
+    "name": "rtyui",
     "business": [
+      "Apple Inc",
       "Foxconn"
     ],
     "regions": [
-      "India"
+      "Taiwan",
+      "Japan"
     ],
     "status": "pending"
   }

@@ -113,9 +113,9 @@ export default function AddOrEditProduct({
         } else {
           await addProduct(productData);
           const addedProduct = {
-            ...productData,
+            ...productData
           };
-          setAddedProduct(addedProduct as ProductProps);
+          setAddedProduct(addedProduct);
           clearFormFields();
           notifyAddProduct();
         }

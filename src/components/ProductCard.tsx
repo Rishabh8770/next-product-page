@@ -33,14 +33,27 @@ export default function ProductCard({
   };
 
   const statusClass = `w-[fit-content] rounded p-1 mb-2 ${
-    status === "pending" ? "text-gray-500 bg-gray-200" : ""
+    status === "pending"
+      ? "text-gray-500 bg-gray-200"
+      : status === "active"
+      ? "text-green-500 bg-green-100"
+      : status === "rejected"
+      ? "text-red-500 bg-red-100"
+      : "text-white bg-gray-700"
+  }`;
+
+  const cardStatusClass = `w-[17rem] h-[18rem] overflow-y-hidden border rounded m-4 shadow-md ${
+    status === "active"
+      ? "shadow-green-300"
+      : status === "rejected"
+      ? "shadow-red-300"
+      : status === "pending"
+      ? "shadow-gray-300"
+      : "shadow-black"
   }`;
 
   return (
-    <div
-      key={id}
-      className="w-[17rem] h-[18rem] overflow-y-hidden shadow-md border rounded m-4"
-    >
+    <div key={id} className={cardStatusClass}>
       <div className="flex flex-col h-full p-2">
         <Link href={`/products/${id}`}>
           <div>

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "e1c9085d-3521-42ea-be20-7146a39e5d6f",
+    "name": "ykuyky",
+    "business": [
+      "Foxconn"
+    ],
+    "regions": [
+      "India"
+    ],
+    "status": "deleted"
+  },
+  {
+    "id": "318397a9-edc3-418f-8553-5c8972fd4bf0",
+    "name": "acsa",
+    "business": [
+      "Foxconn",
+      "Sony"
+    ],
+    "regions": [
+      "Taiwan",
+      "Japan"
+    ],
+    "status": "delete_pending"
+  }
+]
