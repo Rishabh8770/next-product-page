@@ -5,6 +5,9 @@ import { MultiSelectDropdown, Option } from "./MultiSelectDropdown";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import { notifyAddProduct, notifyEditProduct, notifyErrorAddingProduct, notifyErrorEditingProduct } from "@/utils/NotificationUtils";
+import { NotificationContainer } from './UserFeedback';
+import ProductStatus from './ProductStatus';
 
 type AddOrEditProductProps = {
   isEditMode: boolean;
@@ -26,6 +29,12 @@ export default function AddOrEditProduct({
   const getUniqueValues = (array: string[]): string[] => {
     return Array.from(new Set(array));
   };
+
+  const clearFormFields = () => {
+    setProductName("");
+    setSelectBusinessOptions(null)
+    setSelectRegionsOptions(null)
+  }
 
   useEffect(() => {
     if (products) {
@@ -63,7 +72,7 @@ export default function AddOrEditProduct({
     setSelectRegionsOptions(selectedOptions);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (productName && selectBusinessOptions && selectRegionsOptions) {
       const productData = {
@@ -72,16 +81,30 @@ export default function AddOrEditProduct({
         business: selectBusinessOptions.map((option) => option.value),
         regions: selectRegionsOptions.map((option) => option.value),
       };
-      if (isEditMode) {
-        updateProduct(productData);
-      } else {
-        addProduct(productData);
-        router.push("/")
+  
+      try {
+        // throw new Error("its an error")  // To check whether the Error toast works properly or not.
+        if (isEditMode) {
+          await updateProduct(productData);
+          notifyEditProduct();
+        } else {
+          await addProduct(productData);
+          clearFormFields();
+          notifyAddProduct();
+        }
+      } catch (error) {
+        if (isEditMode) {
+          notifyErrorEditingProduct();
+        } else {
+          notifyErrorAddingProduct();
+        }
+        console.error("Error submitting form", error);
       }
     } else {
       alert("Please fill all fields");
     }
   };
+  
 
   return (
     <>
@@ -130,7 +153,7 @@ export default function AddOrEditProduct({
           <div>
             <button
               type="submit"
-              className="p-2 bg-blue-500 text-white rounded"
+              className="p-2 bg-blue-700 text-white rounded disabled:opacity-65"
               disabled={
                 !productName || !selectBusinessOptions || !selectRegionsOptions
               }
@@ -146,6 +169,10 @@ export default function AddOrEditProduct({
           Cancel
         </button>
       </div>
+      <div>
+        <ProductStatus />
+      </div>
+      <NotificationContainer />
     </>
   );
 }

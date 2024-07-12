@@ -4,9 +4,7 @@
     "name": "Playstation",
     "business": [
       "Sony",
-      "Naughty Dog",
-      "Activision",
-      "Square Enix"
+      "Naughty Dog"
     ],
     "regions": [
       "USA",
@@ -128,8 +126,7 @@
     "regions": [
       "USA",
       "Taiwan",
-      "Japan",
-      "India"
+      "Japan"
     ]
   },
   {
@@ -166,11 +163,62 @@
     "name": "lkfgf",
     "business": [
       "Naughty Dog",
-      "Square Enix"
+      "Nike Inc.",
+      "Jordan",
+      "Coca-Cola"
     ],
     "regions": [
       "Japan",
+      "North America",
+      "China",
       "Taiwan"
+    ]
+  },
+  {
+    "id": "61305485-13a2-4a0f-94e5-5aca6a6c07ed",
+    "name": "Rishabh",
+    "business": [
+      "Sony",
+      "Nike Inc.",
+      "TSMC"
+    ],
+    "regions": [
+      "Japan",
+      "Global"
+    ]
+  },
+  {
+    "id": "6dded475-7690-47f8-9971-5cd61b702009",
+    "name": "uyuj",
+    "business": [
+      "Activision"
+    ],
+    "regions": [
+      "Japan"
+    ]
+  },
+  {
+    "id": "0b72efbb-5e42-4d26-b3d3-787066017491",
+    "name": "axsad",
+    "business": [
+      "Naughty Dog",
+      "Activision"
+    ],
+    "regions": [
+      "Japan",
+      "North America"
+    ]
+  },
+  {
+    "id": "86c93084-a388-4e03-95fb-db9aeaa70ec9",
+    "name": "veerv",
+    "business": [
+      "Activision",
+      "Nike Inc."
+    ],
+    "regions": [
+      "North America",
+      "China"
     ]
   }
 ]
