@@ -7,13 +7,12 @@ import Link from "next/link";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
   let product: ProductProps | undefined;
+  const deleted : ProductProps[] = deletedProductData
 
-  // Try to find the product in productData
   product = productData.find((product) => product.id === params.id);
 
-  // If not found in productData, try to find in deletedProductData
   if (!product) {
-    product = deletedProductData.find((product) => product.id === params.id);
+    product = deleted.find((product) => product.id === params.id);
   }
   if (!product) {
     return <div>Product not found</div>;
@@ -39,7 +38,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
           <p>{product.name}</p>
 
           <strong className="underline">Business:</strong>
-          <p>{product.business.join(", ")}</p>
+          <p className="text-center">{product.business.join(", ")}</p>
 
           <strong className="underline">Regions:</strong>
           <p>{product.regions.join(", ")}</p>

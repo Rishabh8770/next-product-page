@@ -5,7 +5,7 @@ import { ProductProps } from "@/types/Types";
 
 type ProductStatusProps = {
   product: ProductProps | null;
-  onStatusUpdate: (product: ProductProps) => void;
+  onStatusUpdate?: (product: ProductProps) => void;
 };
 
 export default function ProductStatus({ product, onStatusUpdate }: ProductStatusProps) {
@@ -14,18 +14,19 @@ export default function ProductStatus({ product, onStatusUpdate }: ProductStatus
   const handleApproveStepChange = async (productId: string, step: "step1" | "step2") => {
     try {
       await approveProductStep(productId, step);
-  
-      if (product) {
+
+      if (product && onStatusUpdate) {
+        const updatedProduct = { ...product };
         if (step === "step2") {
-          if (product.status === "approval_pending") {
-            product.status = "active";
-          } else if (product.status === "delete_approval_pending") {
-            product.status = "deleted";
+          if (updatedProduct.status === "approval_pending") {
+            updatedProduct.status = "active";
+          } else if (updatedProduct.status === "delete_approval_pending") {
+            updatedProduct.status = "deleted";
           }
-        }  else if (step === "step1") {
-          product.status = "approval_pending";
+        } else if (step === "step1") {
+          updatedProduct.status = "approval_pending";
         }
-        onStatusUpdate(product); 
+        onStatusUpdate(updatedProduct);
       }
     } catch (error) {
       console.error("Error updating product status:", error);

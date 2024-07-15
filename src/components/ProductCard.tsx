@@ -77,7 +77,7 @@ export default function ProductCard({
               {["approval_pending", "delete_pending", "pending"].includes(
                 status
               ) && (
-                <span className="text-red-500">
+                <span className="text-red-500 text-center">
                   * Please go to details page for pending approvals
                 </span>
               )}

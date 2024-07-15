@@ -33,6 +33,12 @@ export default function AddOrEditProduct({
   const [regionsOptions, setRegionsOptions] = useState<string[]>([]);
   const [productToEdit, setProductToEdit] = useState<ProductProps | null>(null);
   const [addedProduct, setAddedProduct] = useState<ProductProps | null>(null);
+  const [initialBusinessOptions, setInitialBusinessOptions] = useState<
+    Option[]
+  >([]);
+  const [initialRegionsOptions, setInitialRegionsOptions] = useState<Option[]>(
+    []
+  );
   const router = useRouter();
 
   const getUniqueValues = (array: string[]): string[] => {
@@ -54,20 +60,27 @@ export default function AddOrEditProduct({
       setRegionsOptions(getUniqueValues(allRegionsOptions));
     }
 
-    if (isEditMode && productId) {
-      const productToEdit = products.find((product) => product.id === productId);
-      if (productToEdit) {
-        setProductToEdit(productToEdit);
-        setProductName(productToEdit.name);
+    if (isEditMode && productId && products) {
+      const product = products.find((product) => product.id === productId);
+      if (product) {
+        setProductToEdit(product);
+        setProductName(product.name);
         setSelectBusinessOptions(
-          productToEdit.business.map((biz) => ({ value: biz, label: biz }))
+          product.business.map((biz) => ({ value: biz, label: biz }))
         );
         setSelectRegionsOptions(
-          productToEdit.regions.map((region) => ({ value: region, label: region }))
+          product.regions.map((region) => ({ value: region, label: region }))
+        );
+
+        setInitialBusinessOptions(
+          product.business.map((biz) => ({ value: biz, label: biz }))
+        );
+        setInitialRegionsOptions(
+          product.regions.map((region) => ({ value: region, label: region }))
         );
       }
     }
-  }, [products, isEditMode, productId]);
+  }, [isEditMode, productId, products]);
 
   const handleSelectBusinessFilterChange = (selectedOptions: Option[] | null) => {
     setSelectBusinessOptions(selectedOptions);
@@ -79,6 +92,16 @@ export default function AddOrEditProduct({
 
   const handleArrowClick = () => {
     router.push("/");
+  };
+
+  const isFormChanged = (): boolean => {
+    return (
+      
+      JSON.stringify(selectBusinessOptions) !==
+        JSON.stringify(initialBusinessOptions) ||
+      JSON.stringify(selectRegionsOptions) !==
+        JSON.stringify(initialRegionsOptions)
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,11 +118,11 @@ export default function AddOrEditProduct({
       try {
         if (isEditMode) {
           await updateProduct(productData);
-          setProductToEdit(productData); // Update state to trigger re-render
+          setProductToEdit(productData);
           notifyEditProduct();
         } else {
           await addProduct(productData);
-          setAddedProduct(productData); // Update state to trigger re-render
+          setAddedProduct(productData);
           clearFormFields();
           notifyAddProduct();
         }
@@ -172,10 +195,16 @@ export default function AddOrEditProduct({
             />
           </div>
           <div className="w-1/2">
-            <button
+          <button
               type="submit"
-              className="p-2 bg-blue-700 text-white rounded disabled:opacity-65"
-              disabled={!productName || !selectBusinessOptions || !selectRegionsOptions}
+              className={`p-2 bg-blue-700 text-white rounded disabled:opacity-65 disabled:cursor-not-allowed ${
+                isEditMode && !isFormChanged() ? "cursor-not-allowed" : ""
+              }`}
+              disabled={
+                !selectBusinessOptions ||
+                !selectRegionsOptions ||
+                (isEditMode && !isFormChanged())
+              }
             >
               {isEditMode ? "Update" : "Add Product"}
             </button>
