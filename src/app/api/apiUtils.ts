@@ -58,9 +58,9 @@ export const updateStatus = (
   const productIndex = items.findIndex((item) => item.id === id);
   const deletedProductIndex = deletedItems.findIndex((item) => item.id === id);
 
-  console.log("Updating status:", status);
-  console.log("Product Index:", productIndex);
-  console.log("Deleted Product Index:", deletedProductIndex);
+  // console.log("Updating status:", status);
+  // console.log("Product Index:", productIndex);
+  // console.log("Deleted Product Index:", deletedProductIndex);
 
   if (status === "delete_pending" || status === "delete_approval_pending") {
     if (productIndex !== -1) {
@@ -77,7 +77,6 @@ export const updateStatus = (
       deletedItems[deletedProductIndex].status = status;
       writeDeletedData(deletedItems);
 
-      // Ensure you remove the product from `items` only if it exists
       if (productIndex !== -1) {
         items.splice(productIndex, 1);
         writeData(items);

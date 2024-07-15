@@ -33,6 +33,7 @@ export default function HomePage() {
   const [selectedStatusFilters, setSelectedStatusFilters] = useState<
     Option[] | null
   >(null);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const router = useRouter();
 
@@ -129,6 +130,14 @@ export default function HomePage() {
     setSelectedStatusFilters(selectedOptions);
   };
 
+  const handleClick = () => {
+    setIsWaiting(true); 
+    setTimeout(() => {
+      setIsWaiting(false); 
+    }, 4000);
+    router.push("/addProduct")
+  };
+
   const toggleFilter = () => {
     setFilter((prevFilter) =>
       prevFilter === "active" ? "non-active" : "active"
@@ -151,8 +160,10 @@ export default function HomePage() {
         </div>
         <div className="border-t border-gray-300 mb-2 w-1/4 mt-4"></div>
         <button
-          onClick={() => router.push("/addProduct")}
+          onClick={handleClick}
           className="border rounded bg-[rgb(8,129,52)] text-white p-2 mt-2"
+          style={{ cursor: isWaiting ? "wait" : "pointer" }}
+          disabled={isWaiting}
         >
           Add Product
         </button>
@@ -182,7 +193,7 @@ export default function HomePage() {
             </div>
           )}
         </div>
-        <div className="border-t lg:border-none border-gray-300 mb-2 w-full mt-4 lg:mt-8"></div>
+        <div className="border-t  border-gray-300 mb-2 w-full lg:w-1/4 mt-4 lg:mt-4"></div>
       </div>
       <div className="flex flex-wrap justify-center lg:justify-start w-full lg:w-5/6 pl-0 lg:pl-16 mt-4 lg:mt-0">
         {sortedAndFilteredProducts.length > 0 ? (
