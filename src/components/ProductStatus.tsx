@@ -5,25 +5,37 @@ import { ProductProps } from "@/types/Types";
 
 type ProductStatusProps = {
   product: ProductProps | null;
+  onStatusUpdate: (product: ProductProps) => void;
 };
 
-export default function ProductStatus({ product }: ProductStatusProps) {
+export default function ProductStatus({ product, onStatusUpdate }: ProductStatusProps) {
   const { approveProductStep, rejectProduct } = useProductContext();
 
   const handleApproveStepChange = async (productId: string, step: "step1" | "step2") => {
     try {
       await approveProductStep(productId, step);
-      if (step === "step2" && product) {
-        product.status = "active";
+  
+      if (product) {
+        if (step === "step2") {
+          if (product.status === "approval_pending") {
+            product.status = "active";
+          } else if (product.status === "delete_approval_pending") {
+            product.status = "deleted";
+          }
+        }  else if (step === "step1") {
+          product.status = "approval_pending";
+        }
+        onStatusUpdate(product); 
       }
     } catch (error) {
       console.error("Error updating product status:", error);
     }
   };
+  
 
-  const handleRejectStatusChange = async (productId: string, status: "rejected") => {
+  const handleRejectStatusChange = async (productId: string) => {
     try {
-      await rejectProduct(productId, status);
+      await rejectProduct(productId);
       if (product) {
         product.status = "rejected";
       }
@@ -63,7 +75,7 @@ export default function ProductStatus({ product }: ProductStatusProps) {
                       Approve
                     </button>
                     <button
-                      onClick={() => handleRejectStatusChange(product.id, "rejected")}
+                      onClick={() => handleRejectStatusChange(product.id)}
                       className="p-1 border border-red-500 rounded text-red-500 disabled:opacity-65"
                       disabled={["active", "rejected", "deleted"].includes(product.status || "")}
                     >
@@ -84,7 +96,7 @@ export default function ProductStatus({ product }: ProductStatusProps) {
                       Approve
                     </button>
                     <button
-                      onClick={() => handleRejectStatusChange(product.id, "rejected")}
+                      onClick={() => handleRejectStatusChange(product.id)}
                       className="p-1 border border-red-500 rounded text-red-500 disabled:opacity-65"
                       disabled={["active", "rejected", "deleted"].includes(product.status || "")}
                     >

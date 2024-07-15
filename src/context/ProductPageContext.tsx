@@ -14,7 +14,7 @@ type ProductContextType = {
     productId: string,
     step: "step1" | "step2"
   ) => Promise<void>;
-  rejectProduct: (productId: string, status: "rejected") => Promise<void>;
+  rejectProduct: (productId: string) => Promise<void>;
 };
 
 type ProductContextProviderProps = {
@@ -100,25 +100,27 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
     try {
       const product = products.find((product) => product.id === productId);
       if (!product) throw new Error("Product not found");
-
+  
       let newStatus = product.status;
+  
       if (step === "step1") {
-        newStatus =
-          product.status === "delete_pending"
-            ? "delete_approval_pending"
-            : "approval_pending";
+        if (product.status === "pending") {
+          newStatus = "approval_pending";
+        } else if (product.status === "delete_pending") {
+          newStatus = "delete_approval_pending";
+        }
       } else if (step === "step2") {
-        newStatus =
-          product.status === "delete_approval_pending"
-            ? "deleted"
-            : product.status === "delete_pending"
-            ? "delete_approval_pending"
-            : "active";
+        if (product.status === "approval_pending") {
+          newStatus = "active";
+        } else if (product.status === "delete_approval_pending") {
+          newStatus = "deleted";
+        }
       }
-
+  
       await axios.put(`/api/products/${productId}/approve`, {
         status: newStatus,
       });
+  
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.id === productId ? { ...product, status: newStatus } : product
@@ -129,13 +131,13 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
       throw error;
     }
   };
-
-  const rejectProduct = async (productId: string, status: "rejected") => {
+  
+  const rejectProduct = async (productId: string) => {
     try {
-      await axios.put(`/api/products/${productId}/reject`, { status });
+      await axios.put(`/api/products/${productId}/reject`);
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
-          product.id === productId ? { ...product, status } : product
+          product.id === productId ? { ...product, status: "rejected" } : product
         )
       );
     } catch (error) {
@@ -144,18 +146,19 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
     }
   };
 
-  const contextValue: ProductContextType = {
-    products,
-    addProduct,
-    deleteProduct,
-    updateProduct,
-    fetchProducts,
-    approveProductStep,
-    rejectProduct,
-  };
 
   return (
-    <ProductContext.Provider value={contextValue}>
+    <ProductContext.Provider
+      value={{
+        products,
+        addProduct,
+        deleteProduct,
+        updateProduct,
+        fetchProducts,
+        approveProductStep,
+        rejectProduct,
+      }}
+    >
       {children}
     </ProductContext.Provider>
   );

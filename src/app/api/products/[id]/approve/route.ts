@@ -19,11 +19,11 @@ export async function PUT(req: Request) {
     if (
       status === "approval_pending" ||
       status === "active" ||
+      status === "delete_pending" ||
+      status === "delete_approval_pending" ||
       status === "deleted"
     ) {
       updatedProduct = updateStatus(productId, status);
-    } else if (status === "delete_approval_pending") {
-      updatedProduct = updateStatus(productId, "deleted");
     } else {
       return NextResponse.json({ error: "Invalid status update" }, { status: 400 });
     }

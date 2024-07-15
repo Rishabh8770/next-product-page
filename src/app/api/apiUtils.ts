@@ -51,23 +51,38 @@ updateProductsStatus();
 
 export const updateStatus = (
   id: string,
-  status: "active" | "rejected" | "delete_pending" | "deleted",
+  status: "active" | "rejected" | "delete_pending" | "delete_approval_pending" | "deleted",
 ) => {
   const items = readData();
   const deletedItems = readDeletedData();
   const productIndex = items.findIndex((item) => item.id === id);
   const deletedProductIndex = deletedItems.findIndex((item) => item.id === id);
 
-  if (status === "delete_pending") {
-    if (items[productIndex]?.status === "delete_pending") {
-      items[productIndex].status = "delete_approval_pending";
+  console.log("Updating status:", status);
+  console.log("Product Index:", productIndex);
+  console.log("Deleted Product Index:", deletedProductIndex);
+
+  if (status === "delete_pending" || status === "delete_approval_pending") {
+    if (productIndex !== -1) {
+      items[productIndex].status = status;
       writeData(items);
       return items[productIndex];
-    } else if (items[productIndex]?.status === "delete_approval_pending") {
-      deletedItems[deletedProductIndex].status = "deleted";
+    } else if (deletedProductIndex !== -1) {
+      deletedItems[deletedProductIndex].status = status;
       writeDeletedData(deletedItems);
-      items.splice(productIndex, 1);
-      writeData(items);
+      return deletedItems[deletedProductIndex];
+    }
+  } else if (status === "deleted") {
+    if (deletedProductIndex !== -1) {
+      deletedItems[deletedProductIndex].status = status;
+      writeDeletedData(deletedItems);
+
+      // Ensure you remove the product from `items` only if it exists
+      if (productIndex !== -1) {
+        items.splice(productIndex, 1);
+        writeData(items);
+      }
+      
       return deletedItems[deletedProductIndex];
     }
   } else {
