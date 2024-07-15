@@ -1,14 +1,12 @@
-// src/app/api/products/route.ts
-
-import { NextResponse } from "next/server";
 import { readData, writeData, handleResponse, handleError } from "../apiUtils";
-import fs from "fs";
-import path from "path";
 
-export async function GET() {
+import { readDeletedData } from "../apiUtils";
+
+export async function GET(req: Request) {
   try {
     const data = readData();
-    return handleResponse(data);
+    const deletedData = readDeletedData();
+    return handleResponse([...data, ...deletedData]);
   } catch (error) {
     return handleError("Failed to fetch products", 500);
   }
@@ -17,6 +15,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const newProduct = await req.json();
+    newProduct.status = "pending";
     const data = readData();
     data.push(newProduct);
     writeData(data);

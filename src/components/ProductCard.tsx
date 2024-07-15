@@ -11,6 +11,7 @@ export default function ProductCard({
   name,
   business,
   regions,
+  status = "pending",
 }: ProductProps) {
   const { deleteProduct } = useProductContext();
   const router = useRouter();
@@ -31,11 +32,28 @@ export default function ProductCard({
     router.push(`/editProduct?id=${id}`);
   };
 
+  const statusClass = `w-[fit-content] rounded p-1 mb-2 ${
+    status === "pending"
+      ? "text-gray-500 bg-gray-200"
+      : status === "active"
+      ? "text-green-500 bg-green-100"
+      : status === "rejected"
+      ? "text-red-500 bg-red-100"
+      : "text-white bg-gray-700"
+  }`;
+
+  const cardStatusClass = `w-[17rem] h-auto overflow-y-hidden border rounded m-4 shadow-md ${
+    status === "active"
+      ? "shadow-green-300"
+      : status === "rejected"
+      ? "shadow-red-300"
+      : status === "pending"
+      ? "shadow-gray-300"
+      : "shadow-black"
+  }`;
+
   return (
-    <div
-      key={id}
-      className="w-[17rem] h-[18rem] overflow-y-hidden shadow-md border rounded m-4"
-    >
+    <div key={id} className={cardStatusClass}>
       <div className="flex flex-col h-full p-2">
         <Link href={`/products/${id}`}>
           <div>
@@ -52,16 +70,29 @@ export default function ProductCard({
                 <strong>Regions :</strong> {regions.join(", ")}
               </p>
             </div>
-            <div className="h-10">
-              <p>
-                <strong>Status</strong>
-              </p>
+            <div>
+              <div className={statusClass}>
+                <p>{status}</p>
+              </div>
+              {["approval_pending", "delete_pending", "pending"].includes(
+                status
+              ) && (
+                <span className="text-red-500">
+                  * Please go to details page for pending approvals
+                </span>
+              )}
             </div>
           </div>
         </Link>
-        <div className="flex justify-between p-2 ">
-          <Edit onClick={handleEdit} cursor="pointer" />
-          <Trash2 color="#000000" onClick={handleDelete} cursor="pointer" />
+        <div className="flex justify-between p-2">
+          {!["delete_pending", "delete_approval_pending", "deleted"].includes(
+            status
+          ) && (
+            <>
+              <Edit onClick={handleEdit} cursor="pointer" />
+              <Trash2 color="#000000" onClick={handleDelete} cursor="pointer" />
+            </>
+          )}
         </div>
       </div>
     </div>

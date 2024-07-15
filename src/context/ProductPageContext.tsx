@@ -6,9 +6,15 @@ import { ProductProps } from "@/types/Types";
 
 type ProductContextType = {
   products: ProductProps[];
-  addProduct: (newProduct: ProductProps) => void;
-  deleteProduct: (productId: string) => void;
-  updateProduct: (updatedProduct: ProductProps) => void;
+  addProduct: (newProduct: ProductProps) => Promise<void>;
+  deleteProduct: (productId: string) => Promise<void>;
+  updateProduct: (updatedProduct: ProductProps) => Promise<void>;
+  fetchProducts: () => Promise<void>;
+  approveProductStep: (
+    productId: string,
+    step: "step1" | "step2"
+  ) => Promise<void>;
+  rejectProduct: (productId: string) => Promise<void>;
 };
 
 type ProductContextProviderProps = {
@@ -33,36 +39,47 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
   }, []);
 
   const fetchProducts = async () => {
-    const response = await fetch("/api/products");
-    const data = await response.json();
-    console.log(data);
-    setProducts(data);
+    try {
+      const response = await axios.get("/api/products");
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const addProduct = async (newProduct: ProductProps) => {
     try {
-      const response = await axios.post("/api/products", newProduct);
+      const response = await axios.post("/api/products", {
+        ...newProduct,
+        status: "pending",
+      });
       setProducts((prevProducts) => [...prevProducts, response.data]);
     } catch (error) {
       console.error("Error adding product", error);
+      throw error;
     }
   };
 
-  const deleteProduct = async (id: string) => {
+  const deleteProduct = async (productId: string) => {
     try {
-      await axios.delete(`/api/products/${id}`);
+      await axios.delete(`/api/products/${productId}`);
       setProducts((prevProducts) =>
-        prevProducts.filter((product) => product.id !== id)
+        prevProducts.map((product) =>
+          product.id === productId
+            ? { ...product, status: "delete_pending" }
+            : product
+        )
       );
     } catch (error) {
-      console.error(`Error deleting product with id ${id}`, error);
+      console.error(`Error deleting product with id ${productId}`, error);
+      throw error;
     }
   };
 
   const updateProduct = async (updatedProduct: ProductProps) => {
     try {
       const response = await axios.put(
-        `api/products/${updatedProduct.id}`,
+        `/api/products/${updatedProduct.id}`,
         updatedProduct
       );
       setProducts((prevProducts) =>
@@ -72,19 +89,76 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
       );
     } catch (error) {
       console.error("Error updating product", error);
+      throw error;
+    }
+  };
+
+  const approveProductStep = async (
+    productId: string,
+    step: "step1" | "step2"
+  ) => {
+    try {
+      const product = products.find((product) => product.id === productId);
+      if (!product) throw new Error("Product not found");
+  
+      let newStatus = product.status;
+  
+      if (step === "step1") {
+        if (product.status === "pending") {
+          newStatus = "approval_pending";
+        } else if (product.status === "delete_pending") {
+          newStatus = "delete_approval_pending";
+        }
+      } else if (step === "step2") {
+        if (product.status === "approval_pending") {
+          newStatus = "active";
+        } else if (product.status === "delete_approval_pending") {
+          newStatus = "deleted";
+        }
+      }
+  
+      await axios.put(`/api/products/${productId}/approve`, {
+        status: newStatus,
+      });
+  
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === productId ? { ...product, status: newStatus } : product
+        )
+      );
+    } catch (error) {
+      console.error("Error approving product", error);
+      throw error;
     }
   };
   
-
-  const contextValue: ProductContextType = {
-    products,
-    addProduct,
-    deleteProduct,
-    updateProduct,
+  const rejectProduct = async (productId: string) => {
+    try {
+      await axios.put(`/api/products/${productId}/reject`);
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === productId ? { ...product, status: "rejected" } : product
+        )
+      );
+    } catch (error) {
+      console.error("Error rejecting product", error);
+      throw error;
+    }
   };
 
+
   return (
-    <ProductContext.Provider value={contextValue}>
+    <ProductContext.Provider
+      value={{
+        products,
+        addProduct,
+        deleteProduct,
+        updateProduct,
+        fetchProducts,
+        approveProductStep,
+        rejectProduct,
+      }}
+    >
       {children}
     </ProductContext.Provider>
   );
