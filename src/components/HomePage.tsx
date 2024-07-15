@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,7 @@ import LoadingPage from "@/app/loading";
 import { useProductContext } from "@/context/ProductPageContext";
 import { SearchAndSort, SortOptions } from "@/components/SearchAndSort";
 import { ProductProps } from "@/types/Types";
-import { Option } from "./MultiSelectDropdown";
+import { MultiSelectDropdown, Option } from "./MultiSelectDropdown";
 import FilterProducts from "./FilterProducts";
 import { NotificationContainer } from "./UserFeedback";
 
@@ -23,8 +23,17 @@ export default function HomePage() {
     useState<ProductProps[]>(products);
   const [sortOption, setSortOption] =
     useState<SortOptions>("--please select--");
-  const [selectedBusinessOptions, setSelectedBusinessOptions] = useState<Option[] | null>(null);
-  const [selectedRegionOptions, setSelectedRegionOptions] = useState<Option[] | null>(null);
+  const [selectedBusinessOptions, setSelectedBusinessOptions] = useState<
+    Option[] | null
+  >(null);
+  const [selectedRegionOptions, setSelectedRegionOptions] = useState<
+    Option[] | null
+  >(null);
+  const [filter, setFilter] = useState<"active" | "non-active">("active");
+  const [selectedStatusFilters, setSelectedStatusFilters] = useState<
+    Option[] | null
+  >(null);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const router = useRouter();
 
@@ -63,6 +72,22 @@ export default function HomePage() {
       );
     }
 
+    if (filter === "active") {
+      filtered = filtered.filter((product) => product.status === "active");
+    } else if (filter === "non-active") {
+      filtered = filtered.filter((product) => product.status !== "active");
+
+      if (selectedStatusFilters && selectedStatusFilters.length > 0) {
+        const selectedFilterValues = selectedStatusFilters.map(
+          (option) => option.value
+        );
+
+        filtered = filtered.filter((product) =>
+          selectedFilterValues.includes(product.status || "")
+        );
+      }
+    }
+
     filtered = filtered.sort((a, b) => {
       if (sortOption === "name") {
         return a.name.localeCompare(b.name);
@@ -81,6 +106,8 @@ export default function HomePage() {
     products,
     selectedBusinessOptions,
     selectedRegionOptions,
+    selectedStatusFilters,
+    filter,
   ]);
 
   const handleSearch = (value: string) => {
@@ -99,6 +126,24 @@ export default function HomePage() {
     setSelectedRegionOptions(options);
   };
 
+  const handleStatusFilterChange = (selectedOptions: Option[] | null) => {
+    setSelectedStatusFilters(selectedOptions);
+  };
+
+  const handleClick = () => {
+    setIsWaiting(true); 
+    setTimeout(() => {
+      setIsWaiting(false); 
+    }, 4000);
+    router.push("/addProduct")
+  };
+
+  const toggleFilter = () => {
+    setFilter((prevFilter) =>
+      prevFilter === "active" ? "non-active" : "active"
+    );
+  };
+
   if (loading) {
     return <LoadingPage />;
   }
@@ -115,8 +160,10 @@ export default function HomePage() {
         </div>
         <div className="border-t border-gray-300 mb-2 w-1/4 mt-4"></div>
         <button
-          onClick={() => router.push("/addProduct")}
+          onClick={handleClick}
           className="border rounded bg-[rgb(8,129,52)] text-white p-2 mt-2"
+          style={{ cursor: isWaiting ? "wait" : "pointer" }}
+          disabled={isWaiting}
         >
           Add Product
         </button>
@@ -127,19 +174,41 @@ export default function HomePage() {
             onRegionsFilterChange={handleRegionFilterChange}
           />
         </div>
-        <div className="border-t lg:border-none border-gray-300 mb-2 w-full mt-4"></div>
+        <div className="border-t border-gray-300 mb-2 w-1/4 mt-8"></div>
+        <div className="flex flex-col items-center m-2">
+          <button
+            onClick={toggleFilter}
+            className="border rounded bg-[rgb(8,129,52)] text-white p-2 my-2"
+          >
+            Show {filter === "non-active" ? "Active Products" : "Request List"}
+          </button>
+          {filter === "non-active" && (
+            <div className="md:mx-2 my-2 md:my-0">
+              <MultiSelectDropdown
+                options={["rejected", "pending", "deleted"]}
+                placeholder="Filter by Status"
+                onChange={handleStatusFilterChange}
+                value={selectedStatusFilters}
+              />
+            </div>
+          )}
+        </div>
+        <div className="border-t  border-gray-300 mb-2 w-full lg:w-1/4 mt-4 lg:mt-4"></div>
       </div>
       <div className="flex flex-wrap justify-center lg:justify-start w-full lg:w-5/6 pl-0 lg:pl-16 mt-4 lg:mt-0">
         {sortedAndFilteredProducts.length > 0 ? (
-          sortedAndFilteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              business={product.business}
-              regions={product.regions}
-            />
-          ))
+          sortedAndFilteredProducts.map((product) =>
+            filter === "active" && product.status !== "active" ? null : (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                business={product.business}
+                regions={product.regions}
+                status={product.status}
+              />
+            )
+          )
         ) : (
           <div className="flex items-center h-screen">
             <p className="text-xl">No Product to display</p>

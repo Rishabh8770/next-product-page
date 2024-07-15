@@ -30,7 +30,7 @@ export default function FilterProducts({onBusinessFilterChange, onRegionsFilterC
   const regionOptions = getUniqueValues(products.flatMap((product) => product.regions))
 
   return (
-    <div className="flex flex-col items-center border">
+    <div className="flex flex-col items-center border rounded">
       <div className="text-md my-2">
         Filter By
       </div>

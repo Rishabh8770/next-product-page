@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readData, writeData } from "../../apiUtils";
+import { readData, writeData, readDeletedData, writeDeletedData, updateStatus } from "../../apiUtils";
 
 export async function DELETE(req: Request) {
   const url = new URL(req.url);
@@ -20,8 +20,13 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    const deletedProduct = { ...data[productIndex], status: "delete_pending" };
     data.splice(productIndex, 1);
     writeData(data);
+
+    const deletedData = readDeletedData();
+    deletedData.push(deletedProduct);
+    writeDeletedData(deletedData);
 
     return NextResponse.json(
       { message: "Product deleted successfully" },
@@ -48,12 +53,22 @@ export async function PUT(req: Request) {
 
   try {
     const data = await req.json();
+    data.status = "pending";
     const allProducts = readData();
     const productIndex = allProducts.findIndex(
       (product) => product.id === productId
     );
 
     if (productIndex === -1) {
+      const deletedProducts = readDeletedData();
+      const deletedProductIndex = deletedProducts.findIndex(
+        (product) => product.id === productId
+      );
+      if (deletedProductIndex !== -1) {
+        deletedProducts[deletedProductIndex] = { ...deletedProducts[deletedProductIndex], ...data };
+        writeDeletedData(deletedProducts);
+        return NextResponse.json(deletedProducts[deletedProductIndex], { status: 200 });
+      }
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
