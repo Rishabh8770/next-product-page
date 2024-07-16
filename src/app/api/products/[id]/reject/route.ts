@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { updateStatus } from "../../../apiUtils";
+import { updateStatus } from "@/utils/apiUtils";
 
 export async function PUT(req: Request) {
   const url = new URL(req.url);

@@ -27,7 +27,7 @@ export const notifyErrorAddingProduct = () => {
 };
 
 export const notifyEditProduct = () => {
-  toast.info("Product edited successfully!", options);
+  toast.info("Product has been edited successfully and waiting for further approvals", options);
 };
 
 export const notifyErrorEditingProduct = () => {
@@ -45,7 +45,7 @@ export const notifyDeleteProduct = (
   const confirmDelete = () => {
     deleteCallback();
     toast.dismiss();
-    toast.success("Product deleted successfully!", options);
+    toast.success("Product deleted successfully and waiting for further approvals.", options);
   };
 
   const cancelDelete = () => {
