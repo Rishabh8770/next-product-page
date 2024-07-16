@@ -1,6 +1,5 @@
-import { readData, writeData, handleResponse, handleError } from "../apiUtils";
+import { readData, writeData, handleResponse, handleError, readDeletedData } from "@/utils/apiUtils";
 
-import { readDeletedData } from "../apiUtils";
 
 export async function GET(req: Request) {
   try {

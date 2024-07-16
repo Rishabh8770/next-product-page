@@ -100,9 +100,7 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
     try {
       const product = products.find((product) => product.id === productId);
       if (!product) throw new Error("Product not found");
-  
       let newStatus = product.status;
-  
       if (step === "step1") {
         if (product.status === "pending") {
           newStatus = "approval_pending";
