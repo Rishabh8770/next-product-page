@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "8e3577b2-bb2e-4422-877e-dc75c8f26e2b",
+    "name": "trthtrwwwwe",
+    "business": [
+      "Foxconn",
+      "Aisin Seiki"
+    ],
+    "regions": [
+      "Taiwan",
+      "North America"
+    ],
+    "status": "deleted"
+  }
+]
