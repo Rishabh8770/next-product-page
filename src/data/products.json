@@ -147,14 +147,13 @@
     "id": "c662f483-51ed-49da-b694-c604ff0cc157",
     "name": "ertyui",
     "business": [
-      "Foxconn",
       "Aisin Seiki",
-      "Sony"
+      "Foxconn"
     ],
     "regions": [
-      "Taiwan",
+      "India",
       "Japan",
-      "India"
+      "Taiwan"
     ],
     "status": "pending"
   },
@@ -162,13 +161,22 @@
     "id": "9c8eb62b-9e4b-401d-a328-5c795531e005",
     "name": "rtyui",
     "business": [
-      "Apple Inc",
       "Foxconn"
     ],
     "regions": [
-      "Taiwan",
       "Japan"
     ],
     "status": "pending"
+  },
+  {
+    "id": "27b479be-1a33-4e18-8fdd-6644491acb11",
+    "name": "rg4t5",
+    "business": [
+      "Apple Inc"
+    ],
+    "regions": [
+      "Japan"
+    ],
+    "status": "active"
   }
 ]
