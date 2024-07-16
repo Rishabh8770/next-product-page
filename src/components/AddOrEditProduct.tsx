@@ -33,12 +33,8 @@ export default function AddOrEditProduct({
   const [regionsOptions, setRegionsOptions] = useState<string[]>([]);
   const [productToEdit, setProductToEdit] = useState<ProductProps | null>(null);
   const [addedProduct, setAddedProduct] = useState<ProductProps | null>(null);
-  const [initialBusinessOptions, setInitialBusinessOptions] = useState<
-    Option[]
-  >([]);
-  const [initialRegionsOptions, setInitialRegionsOptions] = useState<Option[]>(
-    []
-  );
+  const [initialBusinessOptions, setInitialBusinessOptions] = useState<Option[]>([]);
+  const [initialRegionsOptions, setInitialRegionsOptions] = useState<Option[]>([]);
   const router = useRouter();
 
   const getUniqueValues = (array: string[]): string[] => {
@@ -49,6 +45,29 @@ export default function AddOrEditProduct({
     setProductName("");
     setSelectBusinessOptions(null);
     setSelectRegionsOptions(null);
+  };
+
+  const initializeFormFields = (product?: ProductProps) => {
+    if (product) {
+      setProductName(product.name);
+      const businessOptions = product.business.map((biz) => ({ value: biz, label: biz }));
+      const regionsOptions = product.regions.map((region) => ({ value: region, label: region }));
+
+      setSelectBusinessOptions(businessOptions);
+      setSelectRegionsOptions(regionsOptions);
+      setInitialBusinessOptions(businessOptions);
+      setInitialRegionsOptions(regionsOptions);
+    } else {
+      clearFormFields();
+    }
+  };
+
+  const resetFormFields = () => {
+    if (productToEdit) {
+      initializeFormFields(productToEdit);
+    } else {
+      clearFormFields();
+    }
   };
 
   useEffect(() => {
@@ -64,20 +83,7 @@ export default function AddOrEditProduct({
       const product = products.find((product) => product.id === productId);
       if (product) {
         setProductToEdit(product);
-        setProductName(product.name);
-        setSelectBusinessOptions(
-          product.business.map((biz) => ({ value: biz, label: biz }))
-        );
-        setSelectRegionsOptions(
-          product.regions.map((region) => ({ value: region, label: region }))
-        );
-
-        setInitialBusinessOptions(
-          product.business.map((biz) => ({ value: biz, label: biz }))
-        );
-        setInitialRegionsOptions(
-          product.regions.map((region) => ({ value: region, label: region }))
-        );
+        initializeFormFields(product);
       }
     }
   }, [isEditMode, productId, products]);
@@ -94,19 +100,29 @@ export default function AddOrEditProduct({
     router.push("/");
   };
 
+  const arraysEqual = (a: Option[], b: Option[]): boolean => {
+    if (a.length !== b.length) return false;
+    a.sort((x, y) => x.value.localeCompare(y.value));
+    b.sort((x, y) => x.value.localeCompare(y.value));
+    return JSON.stringify(a) === JSON.stringify(b);
+  };
+
   const isFormChanged = (): boolean => {
-    return (
-      
-      JSON.stringify(selectBusinessOptions) !==
-        JSON.stringify(initialBusinessOptions) ||
-      JSON.stringify(selectRegionsOptions) !==
-        JSON.stringify(initialRegionsOptions)
+    const isBusinessChanged = !arraysEqual(
+      selectBusinessOptions || [],
+      initialBusinessOptions
     );
+    const isRegionsChanged = !arraysEqual(
+      selectRegionsOptions || [],
+      initialRegionsOptions
+    );
+
+    return isBusinessChanged || isRegionsChanged;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (productName && selectBusinessOptions && selectRegionsOptions) {
+    if (selectBusinessOptions && selectRegionsOptions) {
       const productData: ProductProps = {
         id: isEditMode && productId ? productId : uuidv4(),
         name: productName,
@@ -195,7 +211,7 @@ export default function AddOrEditProduct({
             />
           </div>
           <div className="w-1/2">
-          <button
+            <button
               type="submit"
               className={`p-2 bg-blue-700 text-white rounded disabled:opacity-65 disabled:cursor-not-allowed ${
                 isEditMode && !isFormChanged() ? "cursor-not-allowed" : ""
@@ -208,7 +224,14 @@ export default function AddOrEditProduct({
             >
               {isEditMode ? "Update" : "Add Product"}
             </button>
-            <button className="p-2 m-3 bg-slate-100 text-black rounded" onClick={() => router.push("/")}>
+            <button
+              type="button"
+              className="p-2 m-3 bg-slate-100 text-black rounded"
+              onClick={() => {
+                resetFormFields();
+                router.push("/");
+              }}
+            >
               Cancel
             </button>
           </div>
