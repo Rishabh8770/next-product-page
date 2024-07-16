@@ -4,7 +4,6 @@ const PageHeader = () => {
   return (
     <nav className="bg-slate-200 p-4 w-full">
       <div className="mx-auto px-2 lg:px-2">
-        <div className="relative flex items-center justify-between h-16">
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0">
               <Link href="/">Product-page</Link>
@@ -17,7 +16,6 @@ const PageHeader = () => {
               </div>
             </div>
           </div>
-        </div>
       </div>
     </nav>
   );

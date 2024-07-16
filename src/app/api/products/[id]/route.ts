@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readData, writeData, readDeletedData, writeDeletedData, updateStatus } from "../../apiUtils";
+import { readData, writeData, readDeletedData, writeDeletedData, updateStatus } from "@/utils/apiUtils";
 
 export async function DELETE(req: Request) {
   const url = new URL(req.url);

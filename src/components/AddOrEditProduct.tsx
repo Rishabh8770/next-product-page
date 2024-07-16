@@ -10,6 +10,7 @@ import {
   notifyEditProduct,
   notifyErrorAddingProduct,
   notifyErrorEditingProduct,
+  notifyMandatoryWarn,
 } from "@/utils/NotificationUtils";
 import { NotificationContainer } from "./UserFeedback";
 import ProductStatus from "./ProductStatus";
@@ -151,7 +152,7 @@ export default function AddOrEditProduct({
         console.error("Error submitting form", error);
       }
     } else {
-      alert("Please fill all fields");
+      notifyMandatoryWarn();
     }
   };
 
