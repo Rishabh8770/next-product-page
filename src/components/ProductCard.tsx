@@ -42,7 +42,7 @@ export default function ProductCard({
       : "text-white bg-gray-700"
   }`;
 
-  const cardStatusClass = `w-[17rem] h-auto overflow-y-hidden border rounded m-4 shadow-md ${
+  const cardStatusClass = `w-[17rem] h-[22rem] overflow-y-hidden border rounded m-4 shadow-md ${
     status === "active"
       ? "shadow-green-300"
       : status === "rejected"
@@ -76,16 +76,16 @@ export default function ProductCard({
               </div>
               {["approval_pending", "delete_pending", "pending"].includes(
                 status
-              ) && (
+              ) ? (
                 <span className="text-red-500 text-center">
                   * Please go to details page for pending approvals
                 </span>
-              )}
+              ): (<div className="pt-10">{""}</div>)}
             </div>
           </div>
         </Link>
         <div className="flex justify-between p-2">
-          {!["delete_pending", "delete_approval_pending", "deleted"].includes(
+          {!["delete_pending", "delete_approval_pending", "deleted", "rejected"].includes(
             status
           ) && (
             <>

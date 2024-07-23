@@ -14,6 +14,7 @@ type MultiSelectDropdownProps = {
   value: Option[] | null;
   isDisabled?: boolean;
   isReadOnly?: boolean;
+  name: string
 };
 
 const animatedComponents = makeAnimated();
@@ -25,6 +26,7 @@ export const MultiSelectDropdown = ({
   value,
   isDisabled = false,
   isReadOnly = false,
+  name
 }: MultiSelectDropdownProps) => {
   const memoizedOptions = useMemo(
     () => options.map((option) => ({ value: option, label: option })),
@@ -44,6 +46,7 @@ export const MultiSelectDropdown = ({
       components={animatedComponents}
       closeMenuOnSelect={false}
       isDisabled={isReadOnly}
+      name={name}
     />
   );
 };
