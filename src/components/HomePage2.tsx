@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { ProductProps } from "@/types/Types";
 import { MultiSelectDropdown, Option } from "./MultiSelectDropdown";
 import FilterProducts from "./FilterProducts";
 import { NotificationContainer } from "./UserFeedback";
+import { useMediaQuery } from "@/utils/useMediaQuery"; // Custom hook to detect screen size
 
 function delay(milliSeconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliSeconds));
@@ -34,8 +35,10 @@ export default function HomePage() {
     Option[] | null
   >(null);
   const [isWaiting, setIsWaiting] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 767px)"); // Custom hook to detect mobile view
 
   useEffect(() => {
     async function loadData() {
@@ -131,11 +134,11 @@ export default function HomePage() {
   };
 
   const handleClick = () => {
-    setIsWaiting(true); 
+    setIsWaiting(true);
     setTimeout(() => {
-      setIsWaiting(false); 
+      setIsWaiting(false);
     }, 4000);
-    router.push("/addProduct")
+    router.push("/addProduct");
   };
 
   const toggleFilter = () => {
@@ -148,36 +151,100 @@ export default function HomePage() {
     return <LoadingPage />;
   }
 
-  const homePageCardClassBase = `flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0 ${filter === "active" ? "lg:justify-start":"lg:justify-center"}`
+  const homePageCardClassBase = `flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0 ${
+    filter === "active" ? "lg:justify-start lg:px-28" : "lg:justify-center"
+  }`;
 
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-start">
+      {isMobile && (
+        <div className="fixed top-0 right-0 p-4 z-50 lg:hidden">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="text-2xl">
+            ☰
+          </button>
+        </div>
+      )}
+
+      {isMobile && menuOpen && (
+        <div className="fixed top-0 right-0 w-full h-screen bg-white shadow-lg lg:hidden z-40">
+          <div className="p-4">
+            <button onClick={() => setMenuOpen(false)} className="text-2xl">
+              ×
+            </button>
+            <div className="mt-4">
+              <SearchAndSort
+                placeholder="Search Product"
+                onSearch={handleSearch}
+                onProductSort={handleProductSort}
+              />
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={handleClick}
+                className="border rounded bg-[rgb(8,129,52)] text-white p-2 mt-4"
+                style={{ cursor: isWaiting ? "wait" : "pointer" }}
+                disabled={isWaiting}
+              >
+                Add Product
+              </button>
+            </div>
+            <div className="mt-4">
+              <FilterProducts
+                onBusinessFilterChange={handleBusinessFilterChange}
+                onRegionsFilterChange={handleRegionFilterChange}
+              />
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={toggleFilter}
+                className="border rounded bg-[rgb(8,129,52)] text-white p-2 my-4"
+              >
+                Show{" "}
+                {filter === "non-active" ? "Active Products" : "Request List"}
+              </button>
+            </div>
+
+            {filter === "non-active" && (
+              <div className="my-2">
+                <MultiSelectDropdown
+                  options={["rejected", "pending", "deleted"]}
+                  placeholder="Filter by Status"
+                  onChange={handleStatusFilterChange}
+                  value={selectedStatusFilters}
+                  name="status"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="lg:border lg:border-t-0 w-full lg:w-1/6 h-auto lg:min-h-screen mt-2 md:mt-0 flex flex-col items-center">
-        <div className="mt-4 w-full px-4">
+        <div className="mt-4 w-full px-4 hidden lg:block">
           <SearchAndSort
             placeholder="Search Product"
             onSearch={handleSearch}
             onProductSort={handleProductSort}
           />
         </div>
-        <div className="border-t border-gray-300 mb-2 w-1/4 mt-4"></div>
+        <div className="border-t border-gray-300 mb-2 w-1/4 mt-4 hidden lg:block"></div>
         <button
           onClick={handleClick}
-          className="border rounded bg-[rgb(8,129,52)] text-white p-2 mt-2"
+          className="border rounded bg-[rgb(8,129,52)] text-white p-2 mt-2 hidden lg:block"
           style={{ cursor: isWaiting ? "wait" : "pointer" }}
           disabled={isWaiting}
         >
           Add Product
         </button>
-        <div className="border-t border-gray-300 mb-4 w-1/4 mt-4"></div>
-        <div className="w-full px-4 mt-4">
+        <div className="border-t border-gray-300 mb-4 w-1/4 mt-4 hidden lg:block"></div>
+        <div className="w-full px-4 mt-4 hidden lg:block">
           <FilterProducts
             onBusinessFilterChange={handleBusinessFilterChange}
             onRegionsFilterChange={handleRegionFilterChange}
           />
         </div>
-        <div className="border-t border-gray-300 mb-2 w-1/4 mt-8"></div>
-        <div className="flex flex-col items-center m-2">
+        <div className="border-t border-gray-300 mb-2 w-1/4 mt-8 hidden lg:block"></div>
+        <div className="flex flex-col items-center m-2 lg:block">
           <button
             onClick={toggleFilter}
             className="border rounded bg-[rgb(8,129,52)] text-white p-2 my-2"
@@ -196,8 +263,9 @@ export default function HomePage() {
             </div>
           )}
         </div>
-        <div className="border-t  border-gray-300 mb-2 w-full lg:w-1/4 mt-4 lg:mt-4"></div>
+        <div className="border-t border-gray-300 mb-2 w-full lg:w-1/4 mt-4 lg:mt-4 hidden lg:block"></div>
       </div>
+
       <div className={homePageCardClassBase}>
         {sortedAndFilteredProducts.length > 0 ? (
           sortedAndFilteredProducts.map((product) =>
@@ -222,3 +290,4 @@ export default function HomePage() {
     </div>
   );
 }
+ */
