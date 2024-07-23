@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import LoadingPage from "@/app/loading";
+import SkeletonCard from "@/components/SkeletonCard"; // Import SkeletonCard
 import { useProductContext } from "@/context/ProductPageContext";
 import { SearchAndSort, SortOptions } from "@/components/SearchAndSort";
 import { ProductProps } from "@/types/Types";
@@ -144,11 +144,11 @@ export default function HomePage() {
     );
   };
 
-  if (loading) {
-    return <LoadingPage />;
-  }
+  const filteredProductsForSkeleton = products.filter((product) =>
+    filter === "active" ? product.status === "active" : product.status !== "active"
+  );
 
-  const homePageCardClassBase = `flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0 ${filter === "active" ? "lg:justify-start":"lg:justify-center"}`
+  const homePageCardClassBase = `flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0 ${filter === "active" ? "lg:justify-start":"lg:justify-center"}`;
 
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-start">
@@ -199,23 +199,29 @@ export default function HomePage() {
         <div className="border-t  border-gray-300 mb-2 w-full lg:w-1/4 mt-4 lg:mt-4"></div>
       </div>
       <div className={homePageCardClassBase}>
-        {sortedAndFilteredProducts.length > 0 ? (
-          sortedAndFilteredProducts.map((product) =>
-            filter === "active" && product.status !== "active" ? null : (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                business={product.business}
-                regions={product.regions}
-                status={product.status}
-              />
-            )
-          )
+        {loading ? (
+          filteredProductsForSkeleton.map((_, index) => (
+            <SkeletonCard key={index} />
+          ))
         ) : (
-          <div className="flex items-center h-screen">
-            <p className="text-xl">No Product to display</p>
-          </div>
+          sortedAndFilteredProducts.length > 0 ? (
+            sortedAndFilteredProducts.map((product) =>
+              filter === "active" && product.status !== "active" ? null : (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  business={product.business}
+                  regions={product.regions}
+                  status={product.status}
+                />
+              )
+            )
+          ) : (
+            <div className="flex items-center h-screen">
+              <p className="text-xl">No Product to display</p>
+            </div>
+          )
         )}
       </div>
       <NotificationContainer />
