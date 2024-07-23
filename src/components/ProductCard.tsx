@@ -38,18 +38,18 @@ export default function ProductCard({
       : status === "active"
       ? "text-green-500 bg-green-100"
       : status === "rejected"
-      ? "text-yellow-700 bg-yellow-100"
-      : "text-red-500 bg-red-100"
+      ? "text-red-500 bg-red-100"
+      : "text-white bg-gray-700"
   }`;
 
   const cardStatusClass = `w-[17rem] h-[22rem] overflow-y-hidden border rounded m-4 shadow-md ${
     status === "active"
       ? "shadow-green-300"
       : status === "rejected"
-      ? "shadow-yellow-200"
+      ? "shadow-red-300"
       : status === "pending"
       ? "shadow-gray-300"
-      : "shadow-red-300"
+      : "shadow-black"
   }`;
 
   return (
