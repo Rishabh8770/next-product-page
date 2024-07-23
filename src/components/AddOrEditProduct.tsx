@@ -198,10 +198,8 @@ export default function AddOrEditProduct({
     <>
       <div className="m-10">
         <ArrowLeft
-          width={50}
-          height={30}
           onClick={handleArrowClick}
-          className="cursor-pointer border rounded"
+          className="cursor-pointer border rounded-full size-10 p-1"
         />
       </div>
       <div className="m-10 underline flex justify-center lg:justify-start">
