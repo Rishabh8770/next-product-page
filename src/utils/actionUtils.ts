@@ -51,7 +51,7 @@ updateProductsStatus();
 
 export const updateStatus = (
   id: string,
-  status: "active" | "rejected" | "delete_pending" | "delete_approval_pending" | "deleted",
+  status: "active" | "rejected" | "delete_pending" | "delete_approval_pending" | "deleted" | string | undefined,
 ) => {
   const items = readData();
   const deletedItems = readDeletedData();

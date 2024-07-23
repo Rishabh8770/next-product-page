@@ -189,13 +189,14 @@ export default function HomePage() {
                 placeholder="Filter by Status"
                 onChange={handleStatusFilterChange}
                 value={selectedStatusFilters}
+                name="status"
               />
             </div>
           )}
         </div>
         <div className="border-t  border-gray-300 mb-2 w-full lg:w-1/4 mt-4 lg:mt-4"></div>
       </div>
-      <div className="flex flex-wrap justify-center lg:justify-start w-full lg:w-5/6 pl-0 lg:pl-16 mt-4 lg:mt-0">
+      <div className="flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0">
         {sortedAndFilteredProducts.length > 0 ? (
           sortedAndFilteredProducts.map((product) =>
             filter === "active" && product.status !== "active" ? null : (

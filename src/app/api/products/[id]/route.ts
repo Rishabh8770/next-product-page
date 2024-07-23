@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/* import { NextResponse } from "next/server";
 import { readData, writeData, readDeletedData, writeDeletedData, updateStatus } from "@/utils/apiUtils";
 
 export async function DELETE(req: Request) {
@@ -84,3 +84,4 @@ export async function PUT(req: Request) {
     );
   }
 }
+ */
