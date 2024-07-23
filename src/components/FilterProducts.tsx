@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MultiSelectDropdown, Option } from "./MultiSelectDropdown";
 import { useProductContext } from "@/context/ProductPageContext";
+import { getUniqueValues } from "@/utils/uniqueValuesUtils";
 
 type FilterChangeProps = {
   onBusinessFilterChange : (options: Option[] | null) => void
@@ -22,9 +23,6 @@ export default function FilterProducts({onBusinessFilterChange, onRegionsFilterC
     onRegionsFilterChange(selectedOptions);
   };
 
-  const getUniqueValues = (array: string[]): string[] => {
-    return Array.from(new Set(array));
-  };
 
   const businessOptions = getUniqueValues(products.flatMap((product) => product.business))
   const regionOptions = getUniqueValues(products.flatMap((product) => product.regions))
@@ -42,6 +40,7 @@ export default function FilterProducts({onBusinessFilterChange, onRegionsFilterC
           placeholder="Select Business"
           onChange={handleSelectBusinessFilterChange}
           value={selectBusinessOptions}
+          name="business"
         />
       </div>
       <div className="flex align-items-center my-4">
@@ -51,6 +50,7 @@ export default function FilterProducts({onBusinessFilterChange, onRegionsFilterC
           placeholder="Select Regions"
           onChange={handleSelectRegionFilterChange}
           value={selectRegionOptions}
+          name="regions"
         />
       </div>
     </div>

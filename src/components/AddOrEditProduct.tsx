@@ -2,7 +2,7 @@
 
 import { useProductContext } from "@/context/ProductPageContext";
 import { MultiSelectDropdown, Option } from "./MultiSelectDropdown";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -16,6 +16,9 @@ import { NotificationContainer } from "./UserFeedback";
 import ProductStatus from "./ProductStatus";
 import { ProductProps } from "@/types/Types";
 import { ArrowLeft } from "lucide-react";
+import { debounce } from "lodash";
+import { formAction } from "@/actions/productActions";
+import { getUniqueValues, arraysEqual } from "@/utils/uniqueValuesUtils";
 
 type AddOrEditProductProps = {
   isEditMode: boolean;
@@ -37,10 +40,7 @@ export default function AddOrEditProduct({
   const [initialBusinessOptions, setInitialBusinessOptions] = useState<Option[]>([]);
   const [initialRegionsOptions, setInitialRegionsOptions] = useState<Option[]>([]);
   const router = useRouter();
-
-  const getUniqueValues = (array: string[]): string[] => {
-    return Array.from(new Set(array));
-  };
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const clearFormFields = () => {
     setProductName("");
@@ -51,8 +51,14 @@ export default function AddOrEditProduct({
   const initializeFormFields = (product?: ProductProps) => {
     if (product) {
       setProductName(product.name);
-      const businessOptions = product.business.map((biz) => ({ value: biz, label: biz }));
-      const regionsOptions = product.regions.map((region) => ({ value: region, label: region }));
+      const businessOptions = product.business.map((biz) => ({
+        value: biz,
+        label: biz,
+      }));
+      const regionsOptions = product.regions.map((region) => ({
+        value: region,
+        label: region,
+      }));
 
       setSelectBusinessOptions(businessOptions);
       setSelectRegionsOptions(regionsOptions);
@@ -73,7 +79,9 @@ export default function AddOrEditProduct({
 
   useEffect(() => {
     if (products) {
-      const allBusinessOptions = products.flatMap((product) => product.business);
+      const allBusinessOptions = products.flatMap(
+        (product) => product.business
+      );
       const allRegionsOptions = products.flatMap((product) => product.regions);
 
       setBusinessOptions(getUniqueValues(allBusinessOptions));
@@ -89,24 +97,25 @@ export default function AddOrEditProduct({
     }
   }, [isEditMode, productId, products]);
 
-  const handleSelectBusinessFilterChange = (selectedOptions: Option[] | null) => {
-    setSelectBusinessOptions(selectedOptions);
-  };
+  const handleSelectBusinessFilterChange = useCallback(
+    (selectedOptions: Option[] | null) => {
+      setSelectBusinessOptions(selectedOptions);
+    },
+    []
+  );
 
-  const handleSelectRegionsFilterChange = (selectedOptions: Option[] | null) => {
-    setSelectRegionsOptions(selectedOptions);
-  };
+  const handleSelectRegionsFilterChange = useCallback(
+    (selectedOptions: Option[] | null) => {
+      setSelectRegionsOptions(selectedOptions);
+    },
+    []
+  );
 
-  const handleArrowClick = () => {
+  const handleArrowClick = useCallback(() => {
     router.push("/");
-  };
+  }, [router]);
 
-  const arraysEqual = (a: Option[], b: Option[]): boolean => {
-    if (a.length !== b.length) return false;
-    a.sort((x, y) => x.value.localeCompare(y.value));
-    b.sort((x, y) => x.value.localeCompare(y.value));
-    return JSON.stringify(a) === JSON.stringify(b);
-  };
+  
 
   const isFormChanged = (): boolean => {
     const isBusinessChanged = !arraysEqual(
@@ -121,18 +130,27 @@ export default function AddOrEditProduct({
     return isBusinessChanged || isRegionsChanged;
   };
 
+  const handleProductNameChange = useCallback(
+    debounce((value) => setProductName(value), 300),
+    []
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectBusinessOptions && selectRegionsOptions) {
       const productData: ProductProps = {
         id: isEditMode && productId ? productId : uuidv4(),
         name: productName,
-        business: selectBusinessOptions.map((option) => option.value),
-        regions: selectRegionsOptions.map((option) => option.value),
+        business: selectBusinessOptions.map((option) => option.value) ?? [],
+        regions: selectRegionsOptions.map((option) => option.value) ?? [],
         status: isEditMode ? productToEdit?.status || "pending" : "pending",
       };
-
+  
+      const formData = new FormData(e.target as HTMLFormElement);
+  
       try {
+        await formAction(formData, isEditMode, productId ?? null);
+  
         if (isEditMode) {
           await updateProduct(productData);
           setProductToEdit(productData);
@@ -155,14 +173,26 @@ export default function AddOrEditProduct({
       notifyMandatoryWarn();
     }
   };
+  
 
-  const handleStatusUpdate = (updatedProduct: ProductProps) => {
-    if (isEditMode) {
-      setProductToEdit(updatedProduct);
-    } else {
-      setAddedProduct(updatedProduct);
-    }
-  };
+  const handleStatusUpdate = useCallback(
+    (updatedProduct: ProductProps) => {
+      if (isEditMode) {
+        setProductToEdit(updatedProduct);
+      } else {
+        setAddedProduct(updatedProduct);
+      }
+    },
+    [isEditMode]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -175,20 +205,26 @@ export default function AddOrEditProduct({
         />
       </div>
       <div className="m-10 underline flex justify-center lg:justify-start">
-        <p className="text-2xl">{isEditMode ? "Edit Product" : "Add New Product"}</p>
+        <p className="text-2xl">
+          {isEditMode ? "Edit Product" : "Add New Product"}
+        </p>
       </div>
 
       <div className="flex flex-col items-center justify-center border m-10 p-10">
-        <form className="w-full flex flex-col items-center" onSubmit={handleSubmit}>
+        <form
+          className="w-full flex flex-col items-center"
+          onSubmit={handleSubmit}
+        >
           {!isEditMode && (
             <div className="rounded w-5/6 lg:w-1/2 mb-4 text-center lg:text-start">
               <span>Product Name</span>
               <input
                 type="text"
                 placeholder="Enter product name"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+                defaultValue={productName}
+                onChange={(e) => handleProductNameChange(e.target.value)}
                 className="w-full p-2 border rounded"
+                name="productName"
               />
             </div>
           )}
@@ -200,6 +236,7 @@ export default function AddOrEditProduct({
               placeholder="Select Business"
               onChange={handleSelectBusinessFilterChange}
               value={selectBusinessOptions}
+              name="business"
             />
           </div>
           <div className="rounded w-5/6 lg:w-1/2 mb-4 text-center lg:text-start">
@@ -209,15 +246,18 @@ export default function AddOrEditProduct({
               placeholder="Select Regions"
               onChange={handleSelectRegionsFilterChange}
               value={selectRegionsOptions}
+              name="regions"
             />
           </div>
-          <div className="w-1/2">
+          <div>
             <button
               type="submit"
               className={`p-2 bg-blue-700 text-white rounded disabled:opacity-65 disabled:cursor-not-allowed ${
-                isEditMode && !isFormChanged() ? "cursor-not-allowed" : ""
+                isEditMode && !isFormChanged()
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
-              disabled={
+              disabled={ !productName ||
                 !selectBusinessOptions ||
                 !selectRegionsOptions ||
                 (isEditMode && !isFormChanged())
@@ -240,7 +280,10 @@ export default function AddOrEditProduct({
       </div>
 
       <div className="px-2 lg:px-10">
-        <ProductStatus product={productToEdit ? productToEdit : addedProduct} onStatusUpdate={handleStatusUpdate} />
+        <ProductStatus
+          product={productToEdit ? productToEdit : addedProduct}
+          onStatusUpdate={handleStatusUpdate}
+        />
       </div>
 
       <NotificationContainer />

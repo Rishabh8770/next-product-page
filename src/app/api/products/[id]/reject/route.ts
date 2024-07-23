@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/* import { NextResponse } from "next/server";
 import { updateStatus } from "@/utils/apiUtils";
 
 export async function PUT(req: Request) {
@@ -22,3 +22,4 @@ export async function PUT(req: Request) {
     );
   }
 }
+ */
