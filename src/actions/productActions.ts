@@ -10,8 +10,6 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { ProductProps } from "@/types/Types";
 
-type Product = ProductProps;
-
 export async function formAction(
   formData: FormData,
   isEditMode: boolean,
@@ -21,17 +19,13 @@ export async function formAction(
   const selectBusiness = formData.getAll("business") as string[];
   const selectRegions = formData.getAll("regions") as string[];
 
-  if (
-    (isEditMode && productId) ||
-    (newProductName && selectBusiness.length > 0 && selectRegions.length > 0)
-  ) {
+  if ((isEditMode && productId) || (newProductName && selectBusiness.length > 0 && selectRegions.length > 0)) {
     const products = readData();
-    let productData: Product;
+    let productData: ProductProps;
 
     if (isEditMode && productId) {
-      const productToEdit = products.find(
-        (product) => product.id === productId
-      );
+      const productToEdit = products.find((product) => product.id === productId);
+
       if (!productToEdit) {
         throw new Error("Product not found for editing");
       }
@@ -44,9 +38,7 @@ export async function formAction(
         status: "pending",
       };
 
-      const productIndex = products.findIndex(
-        (product) => product.id === productId
-      );
+      const productIndex = products.findIndex((product) => product.id === productId);
       products[productIndex] = productData;
     } else {
       productData = {
@@ -57,9 +49,9 @@ export async function formAction(
         status: "pending",
       };
 
-      // if (!products.find((product) => product.id === productData.id)) {
-        products.push(productData);
-      // }
+      if (!products.find((product) => product.id === productData.id)) {
+      products.push(productData);
+      }
       return productData;
     }
     return productData;
@@ -68,15 +60,13 @@ export async function formAction(
   }
 }
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async (): Promise<ProductProps[]> => {
   const data = readData();
   const deletedData = readDeletedData();
   return [...data, ...deletedData];
 };
 
-export async function addProduct(
-  newProduct: ProductProps
-): Promise<ProductProps> {
+export async function addProduct(newProduct: ProductProps) {
   newProduct.status = "pending";
   const products = readData();
   products.push(newProduct);
@@ -86,11 +76,9 @@ export async function addProduct(
   return newProduct;
 }
 
-export const updateProduct = (updatedProduct: Product): Product => {
+export const updateProduct = (updatedProduct: ProductProps): ProductProps => {
   const products = readData();
-  const index = products.findIndex(
-    (product) => product.id === updatedProduct.id
-  );
+  const index = products.findIndex((product) => product.id === updatedProduct.id);
   if (index !== -1) {
     products[index] = updatedProduct;
     writeData(products);
@@ -151,7 +139,6 @@ export async function approveProductStep(
   return updatedProduct;
 }
 
-// Reject a product
 export async function rejectProduct(productId: string): Promise<ProductProps> {
   const updatedProduct = updateStatus(productId, "rejected");
   return updatedProduct;

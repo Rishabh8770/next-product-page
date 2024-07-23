@@ -178,5 +178,16 @@
       "Japan"
     ],
     "status": "active"
+  },
+  {
+    "id": "84591b37-b3dd-4bea-9af7-050246282d32",
+    "name": "yukui",
+    "business": [
+      "Foxconn"
+    ],
+    "regions": [
+      "USA"
+    ],
+    "status": "pending"
   }
 ]
