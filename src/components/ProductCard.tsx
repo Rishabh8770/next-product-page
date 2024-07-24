@@ -55,7 +55,7 @@ export default function ProductCard({
       : "text-status-default-text bg-status-default-bg"
   }`;
 
-  const cardStatusClass = `w-[17rem] h-[22rem] overflow-y-hidden border rounded-md m-4 shadow-md ${
+  const cardStatusClass = `w-[17rem] h-[25rem] overflow-y-hidden border rounded-md m-4 shadow-md ${
     status === ProductStatusEnum.Active
       ? "shadow-status-active"
       : status === ProductStatusEnum.Rejected
@@ -87,7 +87,7 @@ export default function ProductCard({
               </div>
 
               {showDetailsMessage.includes(status as ProductStatusEnum) ? (
-                <div className="pb-4">
+                <div className="py-5">
                   <span className="text-red-500 text-center">
                     * Please go to details page for pending approvals
                   </span>
