@@ -80,7 +80,7 @@
     "regions": [
       "Japan"
     ],
-    "status": "pending"
+    "status": "active"
   },
   {
     "id": "7",
@@ -166,7 +166,7 @@
     "regions": [
       "Japan"
     ],
-    "status": "pending"
+    "status": "active"
   },
   {
     "id": "27b479be-1a33-4e18-8fdd-6644491acb11",
@@ -188,6 +188,6 @@
     "regions": [
       "USA"
     ],
-    "status": "pending"
+    "status": "active"
   }
 ]

@@ -131,11 +131,11 @@ export default function HomePage() {
   };
 
   const handleClick = () => {
-    setIsWaiting(true); 
+    setIsWaiting(true);
     setTimeout(() => {
-      setIsWaiting(false); 
+      setIsWaiting(false);
     }, 4000);
-    router.push("/addProduct")
+    router.push("/addProduct");
   };
 
   const toggleFilter = () => {
@@ -145,10 +145,14 @@ export default function HomePage() {
   };
 
   const filteredProductsForSkeleton = products.filter((product) =>
-    filter === "active" ? product.status === "active" : product.status !== "active"
+    filter === "active"
+      ? product.status === "active"
+      : product.status !== "active"
   );
 
-  const homePageCardClassBase = `flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0 ${filter === "active" ? "lg:justify-start":"lg:justify-center"}`;
+  const homePageCardClassBase = `flex flex-wrap justify-center items-center w-full pl-0 mt-4 lg:mt-0 ${
+    filter === "active" ? "lg:justify-start" : "lg:justify-center"
+  }`;
 
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-start">
@@ -201,27 +205,32 @@ export default function HomePage() {
       <div className={homePageCardClassBase}>
         {loading ? (
           filteredProductsForSkeleton.map((_, index) => (
-            <SkeletonCard key={index} />
+            <ProductCard
+              key={index}
+              loading={true}
+              id={""}
+              name={""}
+              business={[]}
+              regions={[]}
+            />
           ))
-        ) : (
-          sortedAndFilteredProducts.length > 0 ? (
-            sortedAndFilteredProducts.map((product) =>
-              filter === "active" && product.status !== "active" ? null : (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  business={product.business}
-                  regions={product.regions}
-                  status={product.status}
-                />
-              )
+        ) : sortedAndFilteredProducts.length > 0 ? (
+          sortedAndFilteredProducts.map((product) =>
+            filter === "active" && product.status !== "active" ? null : (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                business={product.business}
+                regions={product.regions}
+                status={product.status}
+              />
             )
-          ) : (
-            <div className="flex items-center h-screen">
-              <p className="text-xl">No Product to display</p>
-            </div>
           )
+        ) : (
+          <div className="flex items-center h-screen">
+            <p className="text-xl">No Product to display</p>
+          </div>
         )}
       </div>
       <NotificationContainer />

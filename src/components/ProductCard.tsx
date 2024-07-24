@@ -1,3 +1,4 @@
+import React from "react";
 import { useProductContext } from "@/context/ProductPageContext";
 import { Trash2, Edit } from "lucide-react";
 import Link from "next/link";
@@ -5,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { ProductProps } from "@/types/Types";
 import { notifyDeleteProduct } from "@/utils/NotificationUtils";
 import { debounce } from "lodash";
+import SkeletonCard from "@/components/SkeletonCard";
+
+interface ProductCardProps extends ProductProps {
+  loading?: boolean;
+}
 
 export default function ProductCard({
   id,
@@ -12,7 +18,8 @@ export default function ProductCard({
   business,
   regions,
   status = "pending",
-}: ProductProps) {
+  loading = false,
+}: ProductCardProps) {
   const { deleteProduct } = useProductContext();
   const router = useRouter();
 
@@ -31,6 +38,10 @@ export default function ProductCard({
     e.preventDefault();
     router.push(`/editProduct?id=${id}`);
   };
+
+  if (loading) {
+    return <SkeletonCard />;
+  }
 
   const statusClass = `w-[fit-content] rounded p-1 mb-2 ${
     status === "pending"
