@@ -94,7 +94,7 @@ export default function ProductCard({
                 </div>
               ) : (
                 <div className="py-5 italic">
-                  * This card has been{" "}
+                  * This Product has been{" "}
                   <span className="font-semibold italic">
                     {status === ProductStatusEnum.Active
                       ? "Activated"
