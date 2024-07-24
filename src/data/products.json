@@ -155,7 +155,7 @@
       "Japan",
       "Taiwan"
     ],
-    "status": "pending"
+    "status": "rejected"
   },
   {
     "id": "9c8eb62b-9e4b-401d-a328-5c795531e005",
@@ -187,6 +187,21 @@
     ],
     "regions": [
       "USA"
+    ],
+    "status": "active"
+  },
+  {
+    "id": "220ef3a4-d358-4a98-addd-9762b0618f25",
+    "name": "uoumtt",
+    "business": [
+      "Aisin Seiki",
+      "Foxconn",
+      "Sony"
+    ],
+    "regions": [
+      "India",
+      "Japan",
+      "China"
     ],
     "status": "active"
   }
