@@ -3,6 +3,12 @@
 import { memo } from "react";
 import { useProductContext } from "@/context/ProductPageContext";
 import { ProductProps } from "@/types/Types";
+import { ProductStatusEnum } from "@/types/ProductStatusEnum";
+import {
+  disableApproveStep1Statuses,
+  disableApproveStep2Statuses,
+  disableRejectStatuses,
+} from "@/types/StatusSets";
 
 type ProductStatusProps = {
   product: ProductProps | null;
@@ -23,13 +29,15 @@ const ProductStatus = memo(
         if (product && onStatusUpdate) {
           const updatedProduct = { ...product };
           if (step === "step2") {
-            if (updatedProduct.status === "approval_pending") {
-              updatedProduct.status = "active";
-            } else if (updatedProduct.status === "delete_approval_pending") {
-              updatedProduct.status = "deleted";
+            if (updatedProduct.status === ProductStatusEnum.ApprovalPending) {
+              updatedProduct.status = ProductStatusEnum.Active;
+            } else if (
+              updatedProduct.status === ProductStatusEnum.DeleteApprovalPending
+            ) {
+              updatedProduct.status = ProductStatusEnum.Deleted;
             }
           } else if (step === "step1") {
-            updatedProduct.status = "approval_pending";
+            updatedProduct.status = ProductStatusEnum.ApprovalPending;
           }
           onStatusUpdate(updatedProduct);
         }
@@ -42,7 +50,7 @@ const ProductStatus = memo(
       try {
         await rejectProduct(productId);
         if (product) {
-          product.status = "rejected";
+          product.status = ProductStatusEnum.Rejected;
         }
       } catch (error) {
         console.error("Error updating product status:", error);
@@ -96,21 +104,17 @@ const ProductStatus = memo(
                           handleApproveStepChange(product.id, "step1")
                         }
                         className={approveClassBase}
-                        disabled={[
-                          "active",
-                          "rejected",
-                          "deleted",
-                          "approval_pending",
-                          "delete_approval_pending",
-                        ].includes(product.status || "")}
+                        disabled={disableApproveStep1Statuses.includes(
+                          (product.status as ProductStatusEnum) || ""
+                        )}
                       >
                         Approve
                       </button>
                       <button
                         onClick={() => handleRejectStatusChange(product.id)}
                         className={rejectClassBase}
-                        disabled={["active", "rejected", "deleted"].includes(
-                          product.status || ""
+                        disabled={disableRejectStatuses.includes(
+                          (product.status as ProductStatusEnum) || ""
                         )}
                       >
                         Reject
@@ -127,21 +131,17 @@ const ProductStatus = memo(
                           handleApproveStepChange(product.id, "step2")
                         }
                         className={approveClassBase}
-                        disabled={[
-                          "active",
-                          "rejected",
-                          "deleted",
-                          "pending",
-                          "delete_pending",
-                        ].includes(product.status || "")}
+                        disabled={disableApproveStep2Statuses.includes(
+                          (product.status as ProductStatusEnum) || ""
+                        )}
                       >
                         Approve
                       </button>
                       <button
                         onClick={() => handleRejectStatusChange(product.id)}
                         className={rejectClassBase}
-                        disabled={["active", "rejected", "deleted"].includes(
-                          product.status || ""
+                        disabled={disableRejectStatuses.includes(
+                          (product.status as ProductStatusEnum) || ""
                         )}
                       >
                         Reject

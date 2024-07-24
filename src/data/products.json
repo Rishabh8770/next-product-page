@@ -80,7 +80,7 @@
     "regions": [
       "Japan"
     ],
-    "status": "pending"
+    "status": "active"
   },
   {
     "id": "7",
@@ -155,7 +155,7 @@
       "Japan",
       "Taiwan"
     ],
-    "status": "pending"
+    "status": "rejected"
   },
   {
     "id": "9c8eb62b-9e4b-401d-a328-5c795531e005",
@@ -166,7 +166,7 @@
     "regions": [
       "Japan"
     ],
-    "status": "pending"
+    "status": "active"
   },
   {
     "id": "27b479be-1a33-4e18-8fdd-6644491acb11",
@@ -188,6 +188,21 @@
     "regions": [
       "USA"
     ],
-    "status": "pending"
+    "status": "active"
+  },
+  {
+    "id": "220ef3a4-d358-4a98-addd-9762b0618f25",
+    "name": "uoumtt",
+    "business": [
+      "Aisin Seiki",
+      "Foxconn",
+      "Sony"
+    ],
+    "regions": [
+      "India",
+      "Japan",
+      "China"
+    ],
+    "status": "active"
   }
 ]

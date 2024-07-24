@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { ProductProps } from "@/types/Types";
+import { ProductStatusEnum } from "@/types/ProductStatusEnum";
 
 const getFilePath = () => path.join(process.cwd(), "src/data", "products.json");
-const getDeleteFilePath = () => path.join(process.cwd(), "src/data", "deletedProductData.json");
+const getDeleteFilePath = () =>
+  path.join(process.cwd(), "src/data", "deletedProductData.json");
 
 export const readData = (): ProductProps[] => {
   const filePath = getFilePath();
@@ -39,9 +41,9 @@ export const handleError = (error: string, status: number = 500) => {
 const updateProductsStatus = () => {
   const products = readData();
 
-  const updatedProducts = products.map(product => ({
+  const updatedProducts = products.map((product) => ({
     ...product,
-    status: product.status || "pending"
+    status: product.status || ProductStatusEnum.Pending,
   }));
 
   writeData(updatedProducts);
@@ -51,7 +53,14 @@ updateProductsStatus();
 
 export const updateStatus = (
   id: string,
-  status: "active" | "rejected" | "delete_pending" | "delete_approval_pending" | "deleted" | string | undefined,
+  status:
+    | ProductStatusEnum.Active
+    | ProductStatusEnum.Rejected
+    | ProductStatusEnum.DeletePending
+    | ProductStatusEnum.DeleteApprovalPending
+    | ProductStatusEnum.Deleted
+    | string
+    | undefined
 ) => {
   const items = readData();
   const deletedItems = readDeletedData();
@@ -62,7 +71,10 @@ export const updateStatus = (
   // console.log("Product Index:", productIndex);
   // console.log("Deleted Product Index:", deletedProductIndex);
 
-  if (status === "delete_pending" || status === "delete_approval_pending") {
+  if (
+    status === ProductStatusEnum.DeletePending ||
+    status === ProductStatusEnum.DeleteApprovalPending
+  ) {
     if (productIndex !== -1) {
       items[productIndex].status = status;
       writeData(items);
@@ -72,7 +84,7 @@ export const updateStatus = (
       writeDeletedData(deletedItems);
       return deletedItems[deletedProductIndex];
     }
-  } else if (status === "deleted") {
+  } else if (status === ProductStatusEnum.Deleted) {
     if (deletedProductIndex !== -1) {
       deletedItems[deletedProductIndex].status = status;
       writeDeletedData(deletedItems);
@@ -81,7 +93,7 @@ export const updateStatus = (
         items.splice(productIndex, 1);
         writeData(items);
       }
-      
+
       return deletedItems[deletedProductIndex];
     }
   } else {

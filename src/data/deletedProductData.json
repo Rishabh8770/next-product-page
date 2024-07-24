@@ -11,5 +11,17 @@
       "North America"
     ],
     "status": "deleted"
+  },
+  {
+    "id": "0033d75b-ad47-4b5c-9f94-deb7fcb67a89",
+    "name": "azdsrewg",
+    "business": [
+      "Naughty Dog"
+    ],
+    "regions": [
+      "Taiwan",
+      "Japan"
+    ],
+    "status": "deleted"
   }
 ]

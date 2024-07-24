@@ -1,3 +1,4 @@
+import React from "react";
 import { useProductContext } from "@/context/ProductPageContext";
 import { Trash2, Edit } from "lucide-react";
 import Link from "next/link";
@@ -5,14 +6,22 @@ import { useRouter } from "next/navigation";
 import { ProductProps } from "@/types/Types";
 import { notifyDeleteProduct } from "@/utils/NotificationUtils";
 import { debounce } from "lodash";
+import SkeletonCard from "@/components/SkeletonCard";
+import { ProductStatusEnum } from "@/types/ProductStatusEnum";
+import { disableDeleteAndEdit, showDetailsMessage } from "@/types/StatusSets";
+
+interface ProductCardProps extends ProductProps {
+  loading?: boolean;
+}
 
 export default function ProductCard({
   id,
   name,
   business,
   regions,
-  status = "pending",
-}: ProductProps) {
+  status = ProductStatusEnum.Pending,
+  loading = false,
+}: ProductCardProps) {
   const { deleteProduct } = useProductContext();
   const router = useRouter();
 
@@ -32,25 +41,29 @@ export default function ProductCard({
     router.push(`/editProduct?id=${id}`);
   };
 
+  if (loading) {
+    return <SkeletonCard />;
+  }
+
   const statusClass = `w-[fit-content] rounded p-1 mb-2 ${
-    status === "pending"
-      ? "text-gray-500 bg-gray-200"
-      : status === "active"
-      ? "text-green-500 bg-green-100"
-      : status === "rejected"
-      ? "text-yellow-700 bg-yellow-100"
-      : "text-red-500 bg-red-100"
-  }`;
+  status === ProductStatusEnum.Pending
+    ? 'text-status-pending-text bg-status-pending-bg'
+    : status === ProductStatusEnum.Active
+    ? 'text-status-active-text bg-status-active-bg'
+    : status === ProductStatusEnum.Rejected
+    ? 'text-status-rejected-text bg-status-rejected-bg'
+    : 'text-status-default-text bg-status-default-bg'
+}`;
 
   const cardStatusClass = `w-[17rem] h-[22rem] overflow-y-hidden border rounded m-4 shadow-md ${
-    status === "active"
-      ? "shadow-green-300"
-      : status === "rejected"
-      ? "shadow-yellow-200"
-      : status === "pending"
-      ? "shadow-gray-300"
-      : "shadow-red-300"
-  }`;
+  status === ProductStatusEnum.Active
+    ? 'shadow-status-active'
+    : status === ProductStatusEnum.Rejected
+    ? 'shadow-status-rejected'
+    : status === ProductStatusEnum.Pending
+    ? 'shadow-status-pending'
+    : 'shadow-status-default'
+}`;
 
   return (
     <div key={id} className={cardStatusClass}>
@@ -74,8 +87,8 @@ export default function ProductCard({
               <div className={statusClass}>
                 <p>{status}</p>
               </div>
-              {["approval_pending", "delete_pending", "pending"].includes(
-                status
+              {showDetailsMessage.includes(
+                status as ProductStatusEnum
               ) ? (
                 <span className="text-red-500 text-center">
                   * Please go to details page for pending approvals
@@ -85,8 +98,8 @@ export default function ProductCard({
           </div>
         </Link>
         <div className="flex justify-between p-2">
-          {!["delete_pending", "delete_approval_pending", "deleted", "rejected"].includes(
-            status
+          {!disableDeleteAndEdit.includes(
+            status as ProductStatusEnum
           ) && (
             <>
               <Edit onClick={handleEdit} cursor="pointer" />
