@@ -1,6 +1,3 @@
-// components/SkeletonCard.tsx
-import React from 'react';
-
 export default function SkeletonCard() {
   return (
     <div className="w-[17rem] h-[22rem] border rounded m-4 shadow-md animate-pulse">
