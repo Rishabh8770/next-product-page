@@ -9,6 +9,7 @@ import {
 } from "@/utils/actionUtils";
 import { v4 as uuidv4 } from "uuid";
 import { ProductProps } from "@/types/Types";
+import { ProductStatusEnum } from "@/types/ProductStatusEnum";
 
 export async function formAction(
   formData: FormData,
@@ -35,7 +36,7 @@ export async function formAction(
         name: productToEdit.name,
         business: selectBusiness,
         regions: selectRegions,
-        status: "pending",
+        status: ProductStatusEnum.Pending,
       };
 
       const productIndex = products.findIndex((product) => product.id === productId);
@@ -46,7 +47,7 @@ export async function formAction(
         name: newProductName,
         business: selectBusiness,
         regions: selectRegions,
-        status: "pending",
+        status: ProductStatusEnum.Pending,
       };
 
       if (!products.find((product) => product.id === productData.id)) {
@@ -67,7 +68,7 @@ export const getProducts = async (): Promise<ProductProps[]> => {
 };
 
 export async function addProduct(newProduct: ProductProps) {
-  newProduct.status = "pending";
+  newProduct.status = ProductStatusEnum.Pending;
   const products = readData();
   products.push(newProduct);
   console.log("message 1");
@@ -97,7 +98,7 @@ export async function deleteProduct(id: string): Promise<ProductProps> {
 
   const deletedProduct = {
     ...products[productIndex],
-    status: "delete_pending",
+    status: ProductStatusEnum.DeletePending,
   };
   products.splice(productIndex, 1);
   writeData(products);
@@ -121,16 +122,16 @@ export async function approveProductStep(
   if (!product) throw new Error("Product not found");
   let newStatus = product.status;
   if (step === "step1") {
-    if (product.status === "pending") {
-      newStatus = "approval_pending";
-    } else if (product.status === "delete_pending") {
-      newStatus = "delete_approval_pending";
+    if (product.status === ProductStatusEnum.Pending) {
+      newStatus = ProductStatusEnum.ApprovalPending;
+    } else if (product.status === ProductStatusEnum.DeletePending) {
+      newStatus = ProductStatusEnum.DeleteApprovalPending;
     }
   } else if (step === "step2") {
-    if (product.status === "approval_pending") {
-      newStatus = "active";
-    } else if (product.status === "delete_approval_pending") {
-      newStatus = "deleted";
+    if (product.status === ProductStatusEnum.ApprovalPending) {
+      newStatus = ProductStatusEnum.Active;
+    } else if (product.status === ProductStatusEnum.DeleteApprovalPending) {
+      newStatus = ProductStatusEnum.Deleted;
     }
   }
 
@@ -140,6 +141,6 @@ export async function approveProductStep(
 }
 
 export async function rejectProduct(productId: string): Promise<ProductProps> {
-  const updatedProduct = updateStatus(productId, "rejected");
+  const updatedProduct = updateStatus(productId, ProductStatusEnum.Rejected);
   return updatedProduct;
 }

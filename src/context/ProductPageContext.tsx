@@ -10,6 +10,7 @@ import {
   approveProductStep as serverApproveProductStep,
   rejectProduct as serverRejectProduct
 } from "@/actions/productActions";
+import { ProductStatusEnum } from "@/types/ProductStatusEnum";
 
 type ProductContextType = {
   products: ProductProps[];
@@ -50,7 +51,7 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
 
   const addProduct = async (newProduct: ProductProps) => {
     try {
-      newProduct.status = "pending";
+      newProduct.status = ProductStatusEnum.Pending;
       const addedProduct = await serverAddProduct(newProduct);
     console.log("message 2");
 
@@ -79,7 +80,7 @@ export function ProductProvider({ children }: ProductContextProviderProps) {
 
   const updateProduct = async (updatedProduct: ProductProps) => {
     try {
-      updatedProduct.status = "pending"
+      updatedProduct.status = ProductStatusEnum.Pending;
       const productUpdate = await serverUpdateProduct(updatedProduct);
       setProducts((prevProducts) =>
         prevProducts.map((product) =>

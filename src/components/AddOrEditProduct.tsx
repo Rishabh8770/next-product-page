@@ -19,6 +19,7 @@ import { ArrowLeft } from "lucide-react";
 import { debounce } from "lodash";
 import { formAction } from "@/actions/productActions";
 import { getUniqueValues, arraysEqual } from "@/utils/uniqueValuesUtils";
+import { ProductStatusEnum } from "@/types/ProductStatusEnum";
 
 type AddOrEditProductProps = {
   isEditMode: boolean;
@@ -143,7 +144,7 @@ export default function AddOrEditProduct({
         name: productName,
         business: selectBusinessOptions.map((option) => option.value) ?? [],
         regions: selectRegionsOptions.map((option) => option.value) ?? [],
-        status: isEditMode ? productToEdit?.status || "pending" : "pending",
+        status: isEditMode ? productToEdit?.status || ProductStatusEnum.Pending : ProductStatusEnum.Pending,
       };
   
       const formData = new FormData(e.target as HTMLFormElement);
