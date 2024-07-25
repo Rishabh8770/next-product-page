@@ -69,10 +69,10 @@ export default function ProductCard({
     <div key={id} className={cardStatusClass}>
       <div className="flex flex-col h-full p-2">
         <Link href={`/products/${id}`}>
-          <div>
-            <h5 className="underline font-medium">{name}</h5>
+          <div className="text-center border-b p-2 rounded-md">
+            <h5 className="text-xl">{name.charAt(0).toUpperCase() + name.slice(1)}</h5>
           </div>
-          <div className="d-flex flex-column flex-grow">
+          <div className="flex flex-col flex-grow">
             <div className="my-4 h-16">
               <span className="font-semibold">Business</span> :{" "}
               {business.join(", ")}

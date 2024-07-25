@@ -33,7 +33,7 @@ export default function FilterProducts({onBusinessFilterChange, onRegionsFilterC
         Filter By
       </div>
       <div className="border-t border-gray-300 mb-4 w-3/4"></div>
-      <div className="flex items-center my-2 md:my-0">
+      <div className="flex lg:flex-col items-center my-2 md:my-0 lg:space-y-2">
         <h6 className="mx-2 mb-0">Business:</h6>
         <MultiSelectDropdown
           options={businessOptions}
@@ -43,7 +43,7 @@ export default function FilterProducts({onBusinessFilterChange, onRegionsFilterC
           name="business"
         />
       </div>
-      <div className="flex align-items-center my-4">
+      <div className="flex lg:flex-col items-center my-4 lg:space-y-2">
         <h6 className="mx-2 mb-0">Regions:</h6>
         <MultiSelectDropdown
           options={regionOptions}
